@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FlightLog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#07090f;--s1:#0d1220;--s2:#111b2e;--border:#1a2840;
+  --accent:#00c8ff;--accent2:#ff5f3d;--green:#00e676;--yellow:#ffd600;
+  --text:#dde6f0;--muted:#4a6080;
+  --display:'Bebas Neue',sans-serif;--mono:'Share Tech Mono',monospace;--body:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;min-height:100vh;overflow-x:hidden;}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,200,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,200,255,.025) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.app{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:16px 12px 80px;}
+
+/* HEADER */
+.hdr{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.hdr-eye{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:4px;text-transform:uppercase;margin-bottom:2px;}
+.hdr-title{font-family:var(--display);font-size:56px;line-height:1;letter-spacing:3px;color:var(--text);}
+.hdr-title span{color:var(--accent);}
+.hdr-pills{display:flex;gap:10px;flex-wrap:wrap;}
+.pill{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 18px;text-align:center;min-width:72px;}
+.pill .pv{font-family:var(--display);font-size:30px;color:var(--accent);line-height:1;}
+.pill .pl{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+
+/* GITHUB CONNECT BAR */
+.gh-bar{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.gh-bar.connected{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.04);}
+.gh-bar.syncing{border-color:rgba(0,200,255,.3);}
+.gh-avatar{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);}
+.gh-info{flex:1;min-width:0;}
+.gh-name{font-family:var(--mono);font-size:12px;color:var(--text);}
+.gh-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.gh-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-gh{padding:7px 16px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--s2);color:var(--text);white-space:nowrap;}
+.btn-gh:hover{border-color:var(--accent);color:var(--accent);}
+.btn-gh.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+.btn-gh.primary:hover{opacity:.85;}
+.btn-gh.danger:hover{border-color:var(--accent2);color:var(--accent2);}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.sync-dot.off{background:var(--muted);}
+.sync-dot.spin{background:var(--accent);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* TABS */
+.tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content;margin-bottom:20px;}
+.tab-btn{padding:9px 22px;font-family:var(--mono);font-size:11px;letter-spacing:1px;cursor:pointer;background:transparent;border:none;color:var(--muted);transition:all .2s;}
+.tab-btn.active{background:var(--accent);color:var(--bg);font-weight:bold;}
+.tab-btn:hover:not(.active){color:var(--accent);}
+
+.sec-title{font-family:var(--display);font-size:28px;letter-spacing:2px;color:var(--text);margin-bottom:16px;}
+
+/* FILTERS */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+.flbl{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:2px;margin-right:2px;}
+.fbtn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--mono);transition:all .2s;}
+.fbtn.on{border-color:var(--accent2);color:var(--accent2);background:rgba(255,95,61,.08);}
+.fbtn:hover:not(.on){border-color:var(--accent);color:var(--accent);}
+.search{margin-left:auto;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:200px;transition:border-color .2s;}
+.search::placeholder{color:var(--muted);}
+.search:focus{border-color:var(--accent);}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;}
+thead tr{border-bottom:2px solid var(--accent);}
+th{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-align:left;padding:10px 12px;white-space:nowrap;text-transform:uppercase;background:var(--s1);}
+th.sort{cursor:pointer;}th.sort:hover{color:var(--accent);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
+tbody tr:hover{background:rgba(0,200,255,.04);}
+tbody tr.selected{background:rgba(0,200,255,.07);border-left:2px solid var(--accent);}
+td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
+.fnum{font-family:var(--mono);color:var(--accent);font-size:13px;font-weight:bold;}
+.route{display:flex;align-items:center;gap:6px;}
+.iata{font-family:var(--display);font-size:19px;line-height:1;}
+.arr-iata{color:var(--muted);}
+.term{font-size:9px;color:var(--muted);font-family:var(--mono);}
+.arrow{color:var(--muted);font-size:12px;}
+.time-s{font-family:var(--mono);font-size:12px;}
+.time-a{font-size:11px;font-family:var(--mono);margin-top:1px;}
+.delayed{color:var(--accent2);}.ontime{color:var(--green);}
+.seat{background:var(--s1);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-family:var(--mono);font-size:11px;}
+.sbadge{padding:2px 10px;border-radius:20px;font-size:9px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.sb-flown{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);}
+.sb-upcoming{background:rgba(0,200,255,.1);color:var(--accent);border:1px solid rgba(0,200,255,.2);}
+.sb-cancelled{background:rgba(255,95,61,.1);color:var(--accent2);border:1px solid rgba(255,95,61,.2);}
+.airl{font-size:11px;color:var(--muted);}
+
+/* DETAIL */
+.detail{background:var(--s1);border:1px solid var(--accent);border-radius:12px;padding:20px 20px 24px;margin-top:12px;display:none;animation:sd .2s ease;}
+.detail.open{display:block;}
+@keyframes sd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.det-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
+.det-fn{font-family:var(--display);font-size:38px;color:var(--accent);line-height:1;}
+.det-rt{font-family:var(--display);font-size:26px;line-height:1.1;margin-top:4px;}
+.det-actions{display:flex;gap:8px;}
+.det-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--mono);font-size:11px;transition:all .2s;}
+.det-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.det-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+.di .dil{font-size:9px;color:var(--muted);font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+.di .div{font-family:var(--mono);font-size:13px;}
+.div.ac{color:var(--accent);}.div.or{color:var(--accent2);}.div.gr{color:var(--green);}
+.del-bar{margin-top:18px;}
+.del-bar-lbl{font-size:9px;color:var(--muted);font-family:var(--mono);letter-spacing:2px;margin-bottom:6px;text-transform:uppercase;}
+.del-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.del-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:3px;transition:width .6s ease;}
+.del-pts{display:flex;justify-content:space-between;margin-top:5px;font-family:var(--mono);font-size:10px;color:var(--muted);}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:16px;}
+.scard{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.scard h3{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.bignum{font-family:var(--display);font-size:48px;color:var(--accent);line-height:1;}
+.subnum{font-size:11px;color:var(--muted);margin-top:3px;}
+.list-items{list-style:none;}
+.list-items li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.list-items li:last-child{border-bottom:none;}
+.li-cnt{font-family:var(--mono);color:var(--accent);}
+
+/* FORM */
+.form-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;}
+.form-card h2{font-family:var(--display);font-size:36px;color:var(--accent);margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg label{font-size:9px;font-family:var(--mono);letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.fg input,.fg select,.fg textarea{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:9px 11px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .2s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);}
+.fg select option{background:var(--s2);}
+.fg.full{grid-column:1/-1;}
+.fg textarea{resize:vertical;min-height:60px;}
+.form-btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.btn-primary{padding:11px 28px;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-family:var(--display);font-size:20px;letter-spacing:2px;cursor:pointer;transition:opacity .2s;}
+.btn-primary:hover{opacity:.85;}
+.btn-secondary{padding:11px 20px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--accent2);color:var(--accent2);}
+
+/* DATA TAB */
+.io-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
+.io-card h2{font-family:var(--display);font-size:30px;color:var(--text);margin-bottom:6px;}
+.io-card p{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+.io-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-io{padding:9px 20px;border-radius:6px;font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--s2);color:var(--text);}
+.btn-io:hover{border-color:var(--accent);color:var(--accent);}
+.btn-io.danger:hover{border-color:var(--accent2);color:var(--accent2);}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);font-family:var(--mono);}
+.empty .eicon{font-size:36px;margin-bottom:12px;}
+.empty p{font-size:12px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:var(--bg);font-family:var(--mono);font-size:12px;padding:10px 24px;border-radius:6px;z-index:999;transition:transform .3s ease;white-space:nowrap;font-weight:bold;letter-spacing:1px;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(--accent2);}
+
+/* DIALOG */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.dialog{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:340px;width:90%;}
+.dialog h3{font-family:var(--display);font-size:28px;color:var(--accent2);margin-bottom:10px;}
+.dialog p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.dialog-btns{display:flex;gap:10px;}
+
+@media(max-width:600px){
+  .hdr-title{font-size:38px;}.pill .pv{font-size:22px;}
+  .search{width:100%;margin-left:0;}
+  th,td{padding:10px 8px;}
+  .det-grid{grid-template-columns:1fr 1fr;}
+  .hdr{flex-direction:column;align-items:flex-start;}
+  .hdr-pills{gap:8px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-eye">✈ PERSONAL LOGBOOK</div>
+      <div class="hdr-title">FLIGHT<span>LOG</span></div>
+    </div>
+    <div class="hdr-pills">
+      <div class="pill"><div class="pv" id="p-total">0</div><div class="pl">Flights</div></div>
+      <div class="pill"><div class="pv" id="p-airlines">0</div><div class="pl">Airlines</div></div>
+      <div class="pill"><div class="pv" id="p-airports">0</div><div class="pl">Airports</div></div>
+      <div class="pill"><div class="pv" id="p-delay">0%</div><div class="pl">Delay Rate</div></div>
+    </div>
+  </div>
+
+  <!-- GITHUB BAR -->
+  <div class="gh-bar" id="gh-bar">
+    <div class="sync-dot off" id="sync-dot"></div>
+    <div class="gh-info">
+      <div class="gh-name" id="gh-name">Not connected to GitHub</div>
+      <div class="gh-sub" id="gh-sub">Connect to sync your flights across all devices</div>
+    </div>
+    <div class="gh-actions">
+      <button class="btn-gh primary" id="gh-connect-btn" onclick="ghConnect()">Connect GitHub</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="tab('flights',this)">FLIGHTS</button>
+    <button class="tab-btn" onclick="tab('stats',this)">STATS</button>
+    <button class="tab-btn" onclick="tab('add',this)">+ ADD</button>
+    <button class="tab-btn" onclick="tab('data',this)">DATA</button>
+  </div>
+
+  <!-- FLIGHTS TAB -->
+  <div id="t-flights">
+    <div class="filter-row">
+      <span class="flbl">STATUS:</span>
+      <button class="fbtn on" onclick="setF('all',this)">All</button>
+      <button class="fbtn" onclick="setF('Flown',this)">Flown</button>
+      <button class="fbtn" onclick="setF('Upcoming',this)">Upcoming</button>
+      <button class="fbtn" onclick="setF('Cancelled',this)">Cancelled</button>
+      <input class="search" id="search" placeholder="Search…" oninput="render()">
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="sort" onclick="sortBy('num')">Flight ⇅</th>
+            <th>Route</th>
+            <th class="sort" onclick="sortBy('depDate')">Date ⇅</th>
+            <th>Dep.</th><th>Arr.</th>
+            <th>Seat</th><th>Airline</th><th>Aircraft</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div id="detail" class="detail"></div>
+  </div>
+
+  <!-- STATS TAB -->
+  <div id="t-stats" style="display:none">
+    <div class="stats-grid">
+      <div class="scard"><h3>Total Flights</h3><div class="bignum" id="s-total">0</div><div class="subnum" id="s-flown"></div></div>
+      <div class="scard"><h3>Airports Visited</h3><div class="bignum" id="s-airports">0</div><div class="subnum">unique IATA codes</div></div>
+      <div class="scard"><h3>Avg. Dep. Delay</h3><div class="bignum" id="s-avgdelay">0m</div><div class="subnum" id="s-delayed"></div></div>
+      <div class="scard"><h3>Most Used Seat Row</h3><div class="bignum" id="s-seat">—</div><div class="subnum" id="s-seat-sub"></div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="scard"><h3>By Airline</h3><ul class="list-items" id="s-airlines"></ul></div>
+      <div class="scard"><h3>Top Routes</h3><ul class="list-items" id="s-routes"></ul></div>
+      <div class="scard"><h3>Aircraft Types</h3><ul class="list-items" id="s-planes"></ul></div>
+    </div>
+  </div>
+
+  <!-- ADD TAB -->
+  <div id="t-add" style="display:none">
+    <div class="form-card">
+      <h2 id="form-title">LOG NEW FLIGHT</h2>
+      <input type="hidden" id="edit-idx" value="">
+      <div class="form-grid">
+        <div class="fg"><label>Flight Number *</label><input id="f-num" placeholder="FR3174"></div>
+        <div class="fg"><label>Departure IATA *</label><input id="f-dep" placeholder="BCN" maxlength="3" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="fg"><label>Dep. Terminal</label><input id="f-dept" placeholder="T2"></div>
+        <div class="fg"><label>Destination IATA *</label><input id="f-arr" placeholder="IBZ" maxlength="3" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="fg"><label>Arr. Terminal</label><input id="f-arrt" placeholder="-"></div>
+        <div class="fg"><label>Seat</label><input id="f-seat" placeholder="12F" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="fg"><label>Airline</label><input id="f-airline" placeholder="Ryanair"></div>
+        <div class="fg"><label>Aircraft / Plane</label><input id="f-plane" placeholder="737-8AS"></div>
+        <div class="fg"><label>Reservation Code</label><input id="f-res" placeholder="BSDVSQ" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="fg"><label>Departing Date</label><input id="f-depdate" type="date"></div>
+        <div class="fg"><label>Arrival Date</label><input id="f-arrdate" type="date"></div>
+        <div class="fg"><label>Status</label>
+          <select id="f-status"><option>Flown</option><option>Upcoming</option><option>Cancelled</option></select>
+        </div>
+        <div class="fg"><label>Sched. Dep. Time</label><input id="f-sdep" type="time"></div>
+        <div class="fg"><label>Actual Dep. Time</label><input id="f-adep" type="time"></div>
+        <div class="fg"><label>Sched. Arr. Time</label><input id="f-sarr" type="time"></div>
+        <div class="fg"><label>Actual Arr. Time</label><input id="f-aarr" type="time"></div>
+        <div class="fg full"><label>Comments</label><textarea id="f-comment" placeholder="Trip notes, occasion, etc."></textarea></div>
+      </div>
+      <div class="form-btns">
+        <button class="btn-primary" onclick="saveFlight()">SAVE FLIGHT</button>
+        <button class="btn-secondary" onclick="clearForm()">CLEAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA TAB -->
+  <div id="t-data" style="display:none">
+    <div class="io-card">
+      <h2>GitHub Sync</h2>
+      <p id="sync-status-text">Connect GitHub above to enable automatic cloud sync. Your flights are stored in a private <code style="color:var(--accent)">flightlog-data</code> repo in your own GitHub account.</p>
+      <div class="io-btns">
+        <button class="btn-io" onclick="ghPull()">⬇ Pull from GitHub</button>
+        <button class="btn-io" onclick="ghPush()">⬆ Push to GitHub</button>
+      </div>
+    </div>
+    <div class="io-card">
+      <h2>Export Data</h2>
+      <p>Download your flights as a JSON backup or as a CSV for Excel / Google Sheets.</p>
+      <div class="io-btns">
+        <button class="btn-io" onclick="exportJSON()">⬇ Export JSON</button>
+        <button class="btn-io" onclick="exportCSV()">⬇ Export CSV (Excel)</button>
+      </div>
+    </div>
+    <div class="io-card">
+      <h2>Import Data</h2>
+      <p>Import from a previously exported JSON file. Merges new flights (no duplicates by flight number + date).</p>
+      <div class="io-btns">
+        <button class="btn-io" onclick="document.getElementById('json-input').click()">⬆ Import JSON</button>
+        <button class="btn-io" onclick="document.getElementById('csv-input').click()">⬆ Import CSV</button>
+        <input type="file" id="json-input" accept=".json" style="display:none" onchange="importJSON(this)">
+        <input type="file" id="csv-input" accept=".csv" style="display:none" onchange="importCSV(this)">
+      </div>
+    </div>
+    <div class="io-card">
+      <h2>Clear All Data</h2>
+      <p>Permanently delete all saved flights from this device (and GitHub if connected).</p>
+      <div class="io-btns">
+        <button class="btn-io danger" onclick="confirmClear()">🗑 Clear All Flights</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <h3>CONFIRM</h3>
+    <p id="dialog-msg"></p>
+    <div class="dialog-btns">
+      <button class="btn-secondary" onclick="closeDialog()">Cancel</button>
+      <button class="btn-primary" id="dialog-ok" style="font-size:16px;padding:9px 20px;">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIG — fill these in after setup
+// ─────────────────────────────────────────────
+const CONFIG = {
+  // Your GitHub OAuth App Client ID (public, safe to expose)
+  CLIENT_ID: 'YOUR_GITHUB_CLIENT_ID',
+  // URL of your deployed Cloudflare Worker
+  WORKER_URL: 'https://YOUR_WORKER.YOUR_SUBDOMAIN.workers.dev',
+  // The repo name that will be created in each user's GitHub account
+  REPO_NAME: 'flightlog-data',
+  // The file path inside the repo
+  FILE_PATH: 'flights.json',
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let flights = [];
+let ghToken = localStorage.getItem('gh_token') || null;
+let ghUser  = JSON.parse(localStorage.getItem('gh_user') || 'null');
+let ghFileSha = null; // needed for GitHub file updates
+let filterS = 'all', sortKey = 'depDate', sortDir = -1, openIdx = null;
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+async function init() {
+  // Handle OAuth callback (?code=...)
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  if (code) {
+    history.replaceState({}, '', location.pathname); // clean URL
+    await handleOAuthCallback(code);
+    return;
+  }
+
+  loadLocal();
+
+  if (ghToken) {
+    await fetchGhUser();
+    await ghPull(); // auto-sync on load
+  } else {
+    renderGhBar();
+    render();
+  }
+}
+
+// ─────────────────────────────────────────────
+// LOCAL STORAGE FALLBACK
+// ─────────────────────────────────────────────
+function loadLocal() {
+  const raw = localStorage.getItem('flightlog_v2');
+  flights = raw ? JSON.parse(raw) : [];
+}
+function saveLocal() {
+  localStorage.setItem('flightlog_v2', JSON.stringify(flights));
+}
+
+// ─────────────────────────────────────────────
+// GITHUB OAUTH
+// ─────────────────────────────────────────────
+function ghConnect() {
+  const redirectUri = encodeURIComponent(location.href.split('?')[0]);
+  const scope = encodeURIComponent('repo');
+  location.href = `https://github.com/login/oauth/authorize?client_id=${CONFIG.CLIENT_ID}&scope=${scope}&redirect_uri=${redirectUri}`;
+}
+
+async function handleOAuthCallback(code) {
+  setSyncing(true, 'Authenticating with GitHub…');
+  try {
+    const res = await fetch(`${CONFIG.WORKER_URL}/exchange`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if (!data.access_token) throw new Error('No token received');
+    ghToken = data.access_token;
+    localStorage.setItem('gh_token', ghToken);
+    await fetchGhUser();
+    await ghEnsureRepo();
+    await ghPull();
+    toast('GITHUB CONNECTED');
+  } catch (e) {
+    console.error(e);
+    toast('GITHUB AUTH FAILED', 'err');
+    renderGhBar();
+    render();
+  }
+}
+
+async function fetchGhUser() {
+  try {
+    const res = await ghAPI('GET', 'https://api.github.com/user');
+    ghUser = { login: res.login, avatar: res.avatar_url, name: res.name };
+    localStorage.setItem('gh_user', JSON.stringify(ghUser));
+  } catch(e) {
+    ghDisconnect();
+  }
+}
+
+function ghDisconnect() {
+  ghToken = null; ghUser = null; ghFileSha = null;
+  localStorage.removeItem('gh_token');
+  localStorage.removeItem('gh_user');
+  renderGhBar();
+  toast('DISCONNECTED FROM GITHUB');
+}
+
+// ─────────────────────────────────────────────
+// GITHUB API HELPER
+// ─────────────────────────────────────────────
+async function ghAPI(method, url, body) {
+  const opts = {
+    method,
+    headers: {
+      'Authorization': `Bearer ${ghToken}`,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    }
+  };
+  if (body) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
+  const res = await fetch(url, opts);
+  if (res.status === 401) { ghDisconnect(); throw new Error('Unauthorized'); }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+function repoURL(path = '') {
+  return `https://api.github.com/repos/${ghUser.login}/${CONFIG.REPO_NAME}/contents/${path}`;
+}
+
+// ─────────────────────────────────────────────
+// REPO MANAGEMENT
+// ─────────────────────────────────────────────
+async function ghEnsureRepo() {
+  // Check if repo exists
+  try {
+    await ghAPI('GET', `https://api.github.com/repos/${ghUser.login}/${CONFIG.REPO_NAME}`);
+  } catch(e) {
+    // Create it as private
+    await ghAPI('POST', 'https://api.github.com/user/repos', {
+      name: CONFIG.REPO_NAME,
+      private: true,
+      description: 'FlightLog data — managed automatically by FlightLog app',
+      auto_init: true
+    });
+    await new Promise(r => setTimeout(r, 1500)); // wait for repo init
+  }
+}
+
+// ─────────────────────────────────────────────
+// SYNC: PULL & PUSH
+// ─────────────────────────────────────────────
+async function ghPull() {
+  if (!ghToken || !ghUser) { render(); return; }
+  setSyncing(true, 'Pulling from GitHub…');
+  try {
+    const data = await ghAPI('GET', repoURL(CONFIG.FILE_PATH));
+    ghFileSha = data.sha;
+    const decoded = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    flights = decoded;
+    saveLocal();
+    renderGhBar(true);
+    render();
+    toast('SYNCED FROM GITHUB');
+  } catch(e) {
+    if (e.message && e.message.includes('404')) {
+      // File doesn't exist yet — push local data
+      await ghPush(true);
+    } else {
+      renderGhBar(true);
+      render();
+    }
+  }
+}
+
+async function ghPush(silent = false) {
+  if (!ghToken || !ghUser) { toast('Connect GitHub first', 'err'); return; }
+  setSyncing(true, 'Pushing to GitHub…');
+  try {
+    await ghEnsureRepo();
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(flights, null, 2))));
+    const body = {
+      message: `FlightLog sync — ${new Date().toISOString()}`,
+      content,
+      ...(ghFileSha ? { sha: ghFileSha } : {})
+    };
+    const res = await ghAPI('PUT', repoURL(CONFIG.FILE_PATH), body);
+    ghFileSha = res.content.sha;
+    saveLocal();
+    renderGhBar(true);
+    if (!silent) toast('PUSHED TO GITHUB');
+  } catch(e) {
+    console.error(e);
+    toast('PUSH FAILED', 'err');
+    renderGhBar(true);
+  }
+}
+
+// ─────────────────────────────────────────────
+// GITHUB BAR UI
+// ─────────────────────────────────────────────
+function setSyncing(on, msg = '') {
+  const dot = document.getElementById('sync-dot');
+  const sub = document.getElementById('gh-sub');
+  dot.className = 'sync-dot' + (on ? ' spin' : (ghToken ? '' : ' off'));
+  if (msg) sub.textContent = msg;
+}
+
+function renderGhBar(connected = !!ghToken) {
+  const bar = document.getElementById('gh-bar');
+  const dot = document.getElementById('sync-dot');
+  const name = document.getElementById('gh-name');
+  const sub = document.getElementById('gh-sub');
+  const actions = bar.querySelector('.gh-actions');
+
+  if (connected && ghUser) {
+    bar.className = 'gh-bar connected';
+    dot.className = 'sync-dot';
+    name.innerHTML = `<img class="gh-avatar" src="${ghUser.avatar}&s=64"> @${ghUser.login}`;
+    sub.textContent = `Synced to github.com/${ghUser.login}/${CONFIG.REPO_NAME} · ${flights.length} flights`;
+    actions.innerHTML = `
+      <button class="btn-gh" onclick="ghPull()">⬇ Pull</button>
+      <button class="btn-gh" onclick="ghPush()">⬆ Push</button>
+      <button class="btn-gh danger" onclick="ghDisconnect()">Disconnect</button>`;
+  } else {
+    bar.className = 'gh-bar';
+    dot.className = 'sync-dot off';
+    name.textContent = 'Not connected to GitHub';
+    sub.textContent = 'Connect to sync your flights across all devices';
+    actions.innerHTML = `<button class="btn-gh primary" onclick="ghConnect()">Connect GitHub</button>`;
+  }
+}
+
+// ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+function toMins(t){ if(!t||t==='-')return null; const[h,m]=t.split(':').map(Number); return h*60+m; }
+function delayMins(s,a){ const sm=toMins(s),am=toMins(a); if(sm==null||am==null)return 0; return Math.max(0,am-sm); }
+function isDelayed(s,a){ return delayMins(s,a)>5; }
+function fmtDate(d){ if(!d)return '-'; const[y,m,day]=d.split('-'); return `${day}/${m}/${y}`; }
+function sbClass(s){ return s==='Flown'?'sb-flown':s==='Upcoming'?'sb-upcoming':'sb-cancelled'; }
+
+function calcStats(){
+  const airports=new Set([...flights.map(f=>f.dep),...flights.map(f=>f.arr)].filter(Boolean));
+  const airlines=new Set(flights.map(f=>f.airline).filter(Boolean));
+  const delayed=flights.filter(f=>isDelayed(f.sDep,f.aDep)||isDelayed(f.sArr,f.aArr));
+  const delayRate=flights.length?Math.round(delayed.length/flights.length*100):0;
+  return {airports:airports.size,airlines:airlines.size,delayRate};
+}
+
+function updateHeader(){
+  const {airports,airlines,delayRate}=calcStats();
+  document.getElementById('p-total').textContent=flights.length;
+  document.getElementById('p-airlines').textContent=airlines;
+  document.getElementById('p-airports').textContent=airports;
+  document.getElementById('p-delay').textContent=delayRate+'%';
+}
+
+// ─────────────────────────────────────────────
+// RENDER FLIGHTS
+// ─────────────────────────────────────────────
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let list=flights.filter(f=>{
+    const ms=filterS==='all'||f.status===filterS;
+    const mq=!q||[f.num,f.dep,f.arr,f.airline,f.comment,f.seat,f.plane,f.res].join(' ').toLowerCase().includes(q);
+    return ms&&mq;
+  });
+  list.sort((a,b)=>{ let av=a[sortKey]||'',bv=b[sortKey]||''; return av<bv?-sortDir:av>bv?sortDir:0; });
+  const tbody=document.getElementById('tbody');
+  if(!list.length){
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty"><div class="eicon">✈</div><p>No flights found.</p></div></td></tr>`;
+    updateHeader(); return;
+  }
+  tbody.innerHTML=list.map(f=>{
+    const idx=flights.indexOf(f);
+    const dDep=isDelayed(f.sDep,f.aDep),dArr=isDelayed(f.sArr,f.aArr);
+    return `<tr onclick="toggleDetail(${idx})" ${idx===openIdx?'class="selected"':''}>
+      <td><div class="fnum">${f.num}</div></td>
+      <td><div class="route">
+        <div><div class="iata">${f.dep}</div><div class="term">${f.depT||'-'}</div></div>
+        <span class="arrow">›</span>
+        <div><div class="iata arr-iata">${f.arr}</div><div class="term">${f.arrT||'-'}</div></div>
+      </div></td>
+      <td style="font-family:var(--mono);font-size:12px">${fmtDate(f.depDate)}</td>
+      <td><div class="time-s">${f.sDep||'-'}</div>${f.aDep&&f.aDep!==f.sDep?`<div class="time-a ${dDep?'delayed':'ontime'}">${f.aDep}</div>`:''}</td>
+      <td><div class="time-s">${f.sArr||'-'}</div>${f.aArr&&f.aArr!==f.sArr?`<div class="time-a ${dArr?'delayed':'ontime'}">${f.aArr}</div>`:''}</td>
+      <td><span class="seat">${f.seat||'-'}</span></td>
+      <td><span class="airl">${f.airline||'-'}</span></td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${f.plane||'-'}</td>
+      <td><span class="sbadge ${sbClass(f.status)}">${f.status}</span></td>
+    </tr>`;
+  }).join('');
+  updateHeader();
+}
+
+function sortBy(k){ if(sortKey===k)sortDir*=-1; else{sortKey=k;sortDir=-1;} render(); }
+function setF(s,btn){ filterS=s; document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); render(); }
+
+// ─────────────────────────────────────────────
+// DETAIL PANEL
+// ─────────────────────────────────────────────
+function toggleDetail(idx){
+  const panel=document.getElementById('detail');
+  if(openIdx===idx){ panel.classList.remove('open'); openIdx=null; render(); return; }
+  openIdx=idx; render();
+  const f=flights[idx];
+  const dDep=delayMins(f.sDep,f.aDep),dArr=delayMins(f.sArr,f.aArr);
+  const totalDelay=dDep+dArr;
+  let dur='—';
+  const sm=toMins(f.sDep),em=toMins(f.sArr);
+  if(sm!=null&&em!=null){ const d=((em-sm)+1440)%1440; dur=`${Math.floor(d/60)}h ${d%60}m`; }
+  panel.innerHTML=`
+    <div class="det-hdr">
+      <div><div class="det-fn">${f.num}</div><div class="det-rt">${f.dep} → ${f.arr}</div></div>
+      <div class="det-actions">
+        <button class="det-btn" onclick="editFlight(${idx})">✏ EDIT</button>
+        <button class="det-btn" onclick="askDelete(${idx})">🗑 DELETE</button>
+        <button class="det-btn" onclick="toggleDetail(${idx})">✕</button>
+      </div>
+    </div>
+    <div class="det-grid">
+      <div class="di"><div class="dil">Date</div><div class="div">${fmtDate(f.depDate)}</div></div>
+      <div class="di"><div class="dil">Arrival Date</div><div class="div">${fmtDate(f.arrDate)}</div></div>
+      <div class="di"><div class="dil">Airline</div><div class="div">${f.airline||'—'}</div></div>
+      <div class="di"><div class="dil">Aircraft</div><div class="div ac">${f.plane||'—'}</div></div>
+      <div class="di"><div class="dil">Seat</div><div class="div ac">${f.seat||'—'}</div></div>
+      <div class="di"><div class="dil">Reservation</div><div class="div">${f.res||'—'}</div></div>
+      <div class="di"><div class="dil">Dep. Terminal</div><div class="div">${f.depT||'—'}</div></div>
+      <div class="di"><div class="dil">Arr. Terminal</div><div class="div">${f.arrT||'—'}</div></div>
+      <div class="di"><div class="dil">Sched. Dep.</div><div class="div">${f.sDep||'—'}</div></div>
+      <div class="di"><div class="dil">Actual Dep.</div><div class="div ${dDep>5?'or':dDep===0?'':'gr'}">${f.aDep||'—'}${dDep>5?` (+${dDep}m)`:''}</div></div>
+      <div class="di"><div class="dil">Sched. Arr.</div><div class="div">${f.sArr||'—'}</div></div>
+      <div class="di"><div class="dil">Actual Arr.</div><div class="div ${dArr>5?'or':dArr===0?'':'gr'}">${f.aArr||'—'}${dArr>5?` (+${dArr}m)`:''}</div></div>
+      <div class="di"><div class="dil">Duration</div><div class="div">${dur}</div></div>
+      <div class="di"><div class="dil">Status</div><div class="div"><span class="sbadge ${sbClass(f.status)}">${f.status}</span></div></div>
+      ${f.comment?`<div class="di" style="grid-column:1/-1"><div class="dil">Notes</div><div class="div" style="white-space:normal;font-family:var(--body)">${f.comment}</div></div>`:''}
+    </div>
+    ${totalDelay>0?`<div class="del-bar">
+      <div class="del-bar-lbl">Total Delay — ${totalDelay} minutes</div>
+      <div class="del-track"><div class="del-fill" style="width:${Math.min(100,totalDelay/120*100)}%"></div></div>
+      <div class="del-pts"><span>On time</span><span>+2h</span></div>
+    </div>`:''}`;
+  panel.classList.add('open');
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+// ─────────────────────────────────────────────
+// FORM
+// ─────────────────────────────────────────────
+function tab(name,btn){
+  ['flights','stats','add','data'].forEach(t=>{ document.getElementById('t-'+t).style.display=t===name?'block':'none'; });
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(name==='stats')renderStats();
+  if(name==='flights')render();
+}
+
+function gv(id){ return document.getElementById(id).value.trim(); }
+function sv(id,v){ document.getElementById(id).value=v||''; }
+
+function clearForm(){
+  ['f-num','f-dep','f-dept','f-arr','f-arrt','f-seat','f-airline','f-plane','f-res',
+   'f-depdate','f-arrdate','f-sdep','f-adep','f-sarr','f-aarr','f-comment'].forEach(id=>sv(id,''));
+  sv('f-status','Flown');
+  document.getElementById('edit-idx').value='';
+  document.getElementById('form-title').textContent='LOG NEW FLIGHT';
+}
+
+function editFlight(idx){
+  const f=flights[idx]; clearForm();
+  sv('f-num',f.num);sv('f-dep',f.dep);sv('f-dept',f.depT);sv('f-arr',f.arr);sv('f-arrt',f.arrT);
+  sv('f-seat',f.seat);sv('f-airline',f.airline);sv('f-plane',f.plane);sv('f-res',f.res);
+  sv('f-depdate',f.depDate);sv('f-arrdate',f.arrDate);
+  sv('f-sdep',f.sDep);sv('f-adep',f.aDep);sv('f-sarr',f.sArr);sv('f-aarr',f.aArr);
+  sv('f-comment',f.comment);sv('f-status',f.status);
+  document.getElementById('edit-idx').value=idx;
+  document.getElementById('form-title').textContent='EDIT FLIGHT';
+  tab('add',document.querySelectorAll('.tab-btn')[2]);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function saveFlight(){
+  const num=gv('f-num'),dep=gv('f-dep'),arr=gv('f-arr');
+  if(!num||!dep||!arr){ toast('Flight #, departure and destination are required','err'); return; }
+  const f={num,dep,depT:gv('f-dept'),arr,arrT:gv('f-arrt'),seat:gv('f-seat'),airline:gv('f-airline'),
+    plane:gv('f-plane'),res:gv('f-res'),depDate:gv('f-depdate'),arrDate:gv('f-arrdate'),
+    sDep:gv('f-sdep'),aDep:gv('f-adep'),sArr:gv('f-sarr'),aArr:gv('f-aarr'),
+    comment:gv('f-comment'),status:gv('f-status')};
+  const eidx=document.getElementById('edit-idx').value;
+  if(eidx!=='')flights[parseInt(eidx)]=f; else flights.unshift(f);
+  saveLocal();
+  clearForm();
+  tab('flights',document.querySelectorAll('.tab-btn')[0]);
+  render();
+  toast(eidx!==''?'FLIGHT UPDATED — syncing…':'FLIGHT LOGGED — syncing…');
+  await ghPush();
+}
+
+// ─────────────────────────────────────────────
+// DELETE
+// ─────────────────────────────────────────────
+function askDelete(idx){
+  const f=flights[idx];
+  openDialog(`Delete flight ${f.num} (${f.dep}→${f.arr} on ${fmtDate(f.depDate)})?`,()=>deleteFlight(idx));
+}
+async function deleteFlight(idx){
+  flights.splice(idx,1); saveLocal(); openIdx=null;
+  document.getElementById('detail').classList.remove('open');
+  render(); toast('FLIGHT DELETED — syncing…');
+  await ghPush();
+}
+
+// ─────────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────────
+function renderStats(){
+  const flown=flights.filter(f=>f.status==='Flown');
+  document.getElementById('s-total').textContent=flights.length;
+  document.getElementById('s-flown').textContent=`${flown.length} flown · ${flights.filter(f=>f.status==='Upcoming').length} upcoming`;
+  const aps=new Set([...flights.map(f=>f.dep),...flights.map(f=>f.arr)].filter(Boolean));
+  document.getElementById('s-airports').textContent=aps.size;
+  const delays=flights.map(f=>delayMins(f.sDep,f.aDep)).filter(d=>d>0);
+  const avg=delays.length?Math.round(delays.reduce((a,b)=>a+b,0)/delays.length):0;
+  document.getElementById('s-avgdelay').textContent=avg+'m';
+  document.getElementById('s-delayed').textContent=`${delays.length} of ${flights.length} flights delayed`;
+  const rows={};flights.forEach(f=>{ if(f.seat){ const r=f.seat.replace(/[A-Z]/g,''); rows[r]=(rows[r]||0)+1; }});
+  const topRow=Object.entries(rows).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('s-seat').textContent=topRow?'Row '+topRow[0]:'—';
+  document.getElementById('s-seat-sub').textContent=topRow?`${topRow[1]}× flown`:'';
+  const countList=(map,el)=>{ document.getElementById(el).innerHTML=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>`<li><span>${k}</span><span class="li-cnt">${v}×</span></li>`).join(''); };
+  const airm={},routem={},planem={};
+  flights.forEach(f=>{
+    if(f.airline)airm[f.airline]=(airm[f.airline]||0)+1;
+    const r=`${f.dep}→${f.arr}`;routem[r]=(routem[r]||0)+1;
+    if(f.plane)planem[f.plane]=(planem[f.plane]||0)+1;
+  });
+  countList(airm,'s-airlines');countList(routem,'s-routes');countList(planem,'s-planes');
+}
+
+// ─────────────────────────────────────────────
+// EXPORT / IMPORT
+// ─────────────────────────────────────────────
+function exportJSON(){
+  dl(new Blob([JSON.stringify(flights,null,2)],{type:'application/json'}),'flightlog-backup.json');
+  toast('JSON EXPORTED');
+}
+function exportCSV(){
+  const cols=['num','dep','depT','arr','arrT','seat','airline','depDate','arrDate','sDep','aDep','sArr','aArr','comment','res','status','plane'];
+  const headers=['Flight Number','Departure','Terminal Departure','Destination','Terminal Destination','Seat','Company','Departing Date','Arrival Date','Original Departing Time','Actual Departing Time','Original Arrival Time','Actual Arrival Time','Comments','Reservation','Status','Plane'];
+  const rows=[headers.join('\t'),...flights.map(f=>cols.map(c=>f[c]||'').join('\t'))];
+  dl(new Blob([rows.join('\n')],{type:'text/csv'}),'flightlog.csv');
+  toast('CSV EXPORTED');
+}
+function dl(blob,name){ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click(); }
+
+function importJSON(inp){
+  const file=inp.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=async e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!Array.isArray(data))throw new Error();
+      const existing=new Set(flights.map(f=>f.num+'|'+f.depDate));
+      let added=0;
+      data.forEach(f=>{ const k=f.num+'|'+f.depDate;if(!existing.has(k)){flights.unshift(f);added++;} });
+      saveLocal();render();toast(`IMPORTED ${added} NEW FLIGHTS`);
+      await ghPush();
+    }catch(err){toast('INVALID JSON FILE','err');}
+  };
+  r.readAsText(file);inp.value='';
+}
+
+function importCSV(inp){
+  const file=inp.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=async e=>{
+    try{
+      const lines=e.target.result.split('\n').filter(l=>l.trim());
+      const header=lines[0].split(/[\t,]/);
+      const colMap={};
+      const mapping={'Flight Number':'num','Departure':'dep','Terminal Departure':'depT','Destination':'arr','Terminal Destination':'arrT','Seat':'seat','Company':'airline','Departing Date':'depDate','Arrival Date':'arrDate','Original Departing Time':'sDep','Actual Departing Time':'aDep','Original Arrival Time':'sArr','Actual Arrival Time':'aArr','Comments':'comment','Reservation':'res','Status':'status','Plane':'plane'};
+      header.forEach((h,i)=>{ const k=mapping[h.trim()];if(k)colMap[k]=i; });
+      const existing=new Set(flights.map(f=>f.num+'|'+f.depDate));
+      let added=0;
+      lines.slice(1).forEach(line=>{
+        const cells=line.split(/[\t,]/);const f={};
+        Object.entries(colMap).forEach(([k,i])=>{ f[k]=(cells[i]||'').trim(); });
+        ['depDate','arrDate'].forEach(dk=>{ if(f[dk]&&f[dk].includes('/')){ const[d,m,y]=f[dk].split('/');f[dk]=`${y}-${m}-${d}`; }});
+        const key=f.num+'|'+f.depDate;
+        if(f.num&&!existing.has(key)){flights.unshift(f);added++;}
+      });
+      saveLocal();render();toast(`IMPORTED ${added} FLIGHTS FROM CSV`);
+      await ghPush();
+    }catch(err){console.error(err);toast('COULD NOT PARSE CSV','err');}
+  };
+  r.readAsText(file);inp.value='';
+}
+
+// ─────────────────────────────────────────────
+// DIALOG
+// ─────────────────────────────────────────────
+let dialogCb=null;
+function openDialog(msg,cb){ document.getElementById('dialog-msg').textContent=msg;dialogCb=cb;document.getElementById('overlay').classList.add('open'); }
+function closeDialog(){ document.getElementById('overlay').classList.remove('open');dialogCb=null; }
+document.getElementById('dialog-ok').onclick=()=>{ if(dialogCb)dialogCb();closeDialog(); };
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('overlay'))closeDialog(); });
+
+function confirmClear(){
+  openDialog('This will delete ALL flights permanently. Are you sure?',async ()=>{
+    flights=[];saveLocal();render();toast('ALL DATA CLEARED','err');
+    await ghPush();
+  });
+}
+
+// ─────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast'+(type?' '+type:'');
+  void t.offsetWidth;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ─────────────────────────────────────────────
+// GO
+// ─────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
