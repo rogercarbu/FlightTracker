@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -8,170 +8,238 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --bg:#07090f;--s1:#0d1220;--s2:#111b2e;--border:#1a2840;
-  --accent:#00c8ff;--accent2:#ff5f3d;--green:#00e676;--yellow:#ffd600;
-  --text:#dde6f0;--muted:#4a6080;
-  --display:'Bebas Neue',sans-serif;--mono:'Share Tech Mono',monospace;--body:'Outfit',sans-serif;
+
+/* ── DARK THEME (default) ── */
+:root,[data-theme="dark"]{
+  --bg:#07090f;
+  --s1:#0d1220;
+  --s2:#111b2e;
+  --border:#1a2840;
+  --accent:#1a6b8a;        /* dark blue */
+  --accent-bright:#2596be; /* bright version for text/icons */
+  --accent2:#5c3d1e;       /* brown */
+  --accent2-bright:#a0673a;
+  --green:#1e5c3a;
+  --green-bright:#2e9e5e;
+  --text:#dde6f0;
+  --text-strong:#f0f5fb;
+  --muted:#4a6080;
+  --grid-line:rgba(37,150,190,.025);
+  --shadow:0 2px 16px rgba(0,0,0,.5);
 }
+
+/* ── LIGHT THEME ── */
+[data-theme="light"]{
+  --bg:#f4f1ec;
+  --s1:#ede9e1;
+  --s2:#e4dfd5;
+  --border:#c8bfaf;
+  --accent:#1b4f72;        /* dark navy blue */
+  --accent-bright:#1b4f72;
+  --accent2:#6b3a1f;       /* brown */
+  --accent2-bright:#6b3a1f;
+  --green:#1a4731;
+  --green-bright:#1a6640;
+  --text:#1c2b20;
+  --text-strong:#0d1a10;
+  --muted:#7a6e60;
+  --grid-line:rgba(27,79,114,.04);
+  --shadow:0 2px 16px rgba(0,0,0,.12);
+}
+
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;min-height:100vh;overflow-x:hidden;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Outfit',sans-serif;font-size:14px;
+  min-height:100vh;overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
 body::before{
   content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(0,200,255,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,200,255,.025) 1px,transparent 1px);
+  background-image:
+    linear-gradient(var(--grid-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
   background-size:48px 48px;
 }
 .app{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:16px 12px 80px;}
 
-/* HEADER */
+/* ── THEME TOGGLE ── */
+.theme-toggle{
+  position:fixed;top:16px;right:16px;z-index:100;
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:24px;padding:6px 14px 6px 10px;
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--muted);
+  transition:all .2s;box-shadow:var(--shadow);
+}
+.theme-toggle:hover{border-color:var(--accent-bright);color:var(--accent-bright);}
+.toggle-track{
+  width:32px;height:18px;border-radius:9px;
+  background:var(--border);position:relative;
+  transition:background .3s;flex-shrink:0;
+}
+[data-theme="light"] .toggle-track{background:var(--accent-bright);}
+.toggle-thumb{
+  width:12px;height:12px;border-radius:50%;
+  background:var(--muted);position:absolute;
+  top:3px;left:3px;transition:transform .3s,background .3s;
+}
+[data-theme="light"] .toggle-thumb{transform:translateX(14px);background:#fff;}
+
+/* ── HEADER ── */
 .hdr{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-.hdr-eye{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:4px;text-transform:uppercase;margin-bottom:2px;}
-.hdr-title{font-family:var(--display);font-size:56px;line-height:1;letter-spacing:3px;color:var(--text);}
-.hdr-title span{color:var(--accent);}
+.hdr-eye{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent-bright);letter-spacing:4px;text-transform:uppercase;margin-bottom:2px;}
+.hdr-title{font-family:'Bebas Neue',sans-serif;font-size:56px;line-height:1;letter-spacing:3px;color:var(--text-strong);}
+.hdr-title span{color:var(--accent-bright);}
 .hdr-pills{display:flex;gap:10px;flex-wrap:wrap;}
-.pill{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 18px;text-align:center;min-width:72px;}
-.pill .pv{font-family:var(--display);font-size:30px;color:var(--accent);line-height:1;}
+.pill{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 18px;text-align:center;min-width:72px;box-shadow:var(--shadow);}
+.pill .pv{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--accent-bright);line-height:1;}
 .pill .pl{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
 
-/* GITHUB CONNECT BAR */
-.gh-bar{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-.gh-bar.connected{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.04);}
-.gh-bar.syncing{border-color:rgba(0,200,255,.3);}
+/* ── GITHUB BAR ── */
+.gh-bar{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--shadow);}
+.gh-bar.connected{border-color:var(--green);background:var(--s2);}
 .gh-avatar{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);}
 .gh-info{flex:1;min-width:0;}
-.gh-name{font-family:var(--mono);font-size:12px;color:var(--text);}
+.gh-name{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text);}
 .gh-sub{font-size:10px;color:var(--muted);margin-top:2px;}
 .gh-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.btn-gh{padding:7px 16px;border-radius:6px;font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--s2);color:var(--text);white-space:nowrap;}
-.btn-gh:hover{border-color:var(--accent);color:var(--accent);}
-.btn-gh.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+.btn-gh{padding:7px 16px;border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--s2);color:var(--text);white-space:nowrap;}
+.btn-gh:hover{border-color:var(--accent-bright);color:var(--accent-bright);}
+.btn-gh.primary{background:var(--accent-bright);color:#fff;border-color:var(--accent-bright);}
 .btn-gh.primary:hover{opacity:.85;}
-.btn-gh.danger:hover{border-color:var(--accent2);color:var(--accent2);}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.btn-gh.danger:hover{border-color:var(--accent2-bright);color:var(--accent2-bright);}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green-bright);flex-shrink:0;}
 .sync-dot.off{background:var(--muted);}
-.sync-dot.spin{background:var(--accent);animation:pulse 1s infinite;}
+.sync-dot.spin{background:var(--accent-bright);animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* TABS */
+/* ── TABS ── */
 .tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content;margin-bottom:20px;}
-.tab-btn{padding:9px 22px;font-family:var(--mono);font-size:11px;letter-spacing:1px;cursor:pointer;background:transparent;border:none;color:var(--muted);transition:all .2s;}
-.tab-btn.active{background:var(--accent);color:var(--bg);font-weight:bold;}
-.tab-btn:hover:not(.active){color:var(--accent);}
+.tab-btn{padding:9px 22px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;background:transparent;border:none;color:var(--muted);transition:all .2s;}
+.tab-btn.active{background:var(--accent-bright);color:#fff;font-weight:bold;}
+.tab-btn:hover:not(.active){color:var(--accent-bright);}
 
-.sec-title{font-family:var(--display);font-size:28px;letter-spacing:2px;color:var(--text);margin-bottom:16px;}
-
-/* FILTERS */
+/* ── FILTERS ── */
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
-.flbl{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:2px;margin-right:2px;}
-.fbtn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--mono);transition:all .2s;}
-.fbtn.on{border-color:var(--accent2);color:var(--accent2);background:rgba(255,95,61,.08);}
-.fbtn:hover:not(.on){border-color:var(--accent);color:var(--accent);}
-.search{margin-left:auto;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:200px;transition:border-color .2s;}
+.flbl{font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;letter-spacing:2px;margin-right:2px;}
+.fbtn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;font-family:'Share Tech Mono',monospace;transition:all .2s;}
+.fbtn.on{border-color:var(--accent2-bright);color:var(--accent2-bright);background:var(--s2);}
+.fbtn:hover:not(.on){border-color:var(--accent-bright);color:var(--accent-bright);}
+.search{margin-left:auto;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:7px 14px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;width:200px;transition:border-color .2s;}
 .search::placeholder{color:var(--muted);}
-.search:focus{border-color:var(--accent);}
+.search:focus{border-color:var(--accent-bright);}
 
-/* TABLE */
-.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);box-shadow:var(--shadow);}
 table{width:100%;border-collapse:collapse;}
-thead tr{border-bottom:2px solid var(--accent);}
-th{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-align:left;padding:10px 12px;white-space:nowrap;text-transform:uppercase;background:var(--s1);}
-th.sort{cursor:pointer;}th.sort:hover{color:var(--accent);}
+thead tr{border-bottom:2px solid var(--accent-bright);}
+th{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-align:left;padding:10px 12px;white-space:nowrap;text-transform:uppercase;background:var(--s1);}
+th.sort{cursor:pointer;}th.sort:hover{color:var(--accent-bright);}
 tbody tr{border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
-tbody tr:hover{background:rgba(0,200,255,.04);}
-tbody tr.selected{background:rgba(0,200,255,.07);border-left:2px solid var(--accent);}
+tbody tr:hover{background:var(--s2);}
+tbody tr.selected{background:var(--s2);border-left:3px solid var(--accent-bright);}
 td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
-.fnum{font-family:var(--mono);color:var(--accent);font-size:13px;font-weight:bold;}
+.fnum{font-family:'Share Tech Mono',monospace;color:var(--accent-bright);font-size:13px;font-weight:bold;}
 .route{display:flex;align-items:center;gap:6px;}
-.iata{font-family:var(--display);font-size:19px;line-height:1;}
+.iata{font-family:'Bebas Neue',sans-serif;font-size:19px;line-height:1;color:var(--text-strong);}
 .arr-iata{color:var(--muted);}
-.term{font-size:9px;color:var(--muted);font-family:var(--mono);}
+.term{font-size:9px;color:var(--muted);font-family:'Share Tech Mono',monospace;}
 .arrow{color:var(--muted);font-size:12px;}
-.time-s{font-family:var(--mono);font-size:12px;}
-.time-a{font-size:11px;font-family:var(--mono);margin-top:1px;}
-.delayed{color:var(--accent2);}.ontime{color:var(--green);}
-.seat{background:var(--s1);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-family:var(--mono);font-size:11px;}
-.sbadge{padding:2px 10px;border-radius:20px;font-size:9px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
-.sb-flown{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);}
-.sb-upcoming{background:rgba(0,200,255,.1);color:var(--accent);border:1px solid rgba(0,200,255,.2);}
-.sb-cancelled{background:rgba(255,95,61,.1);color:var(--accent2);border:1px solid rgba(255,95,61,.2);}
+.time-s{font-family:'Share Tech Mono',monospace;font-size:12px;}
+.time-a{font-size:11px;font-family:'Share Tech Mono',monospace;margin-top:1px;}
+.delayed{color:var(--accent2-bright);}
+.ontime{color:var(--green-bright);}
+.seat{background:var(--s1);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-family:'Share Tech Mono',monospace;font-size:11px;}
+.sbadge{padding:2px 10px;border-radius:20px;font-size:9px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.sb-flown{background:var(--green);color:var(--green-bright);border:1px solid var(--green);}
+.sb-upcoming{background:var(--accent);color:var(--accent-bright);border:1px solid var(--accent);}
+.sb-cancelled{background:var(--accent2);color:var(--accent2-bright);border:1px solid var(--accent2);}
 .airl{font-size:11px;color:var(--muted);}
 
-/* DETAIL */
-.detail{background:var(--s1);border:1px solid var(--accent);border-radius:12px;padding:20px 20px 24px;margin-top:12px;display:none;animation:sd .2s ease;}
+/* ── DETAIL PANEL ── */
+.detail{background:var(--s1);border:1px solid var(--accent-bright);border-radius:12px;padding:20px 20px 24px;margin-top:12px;display:none;animation:sd .2s ease;box-shadow:var(--shadow);}
 .detail.open{display:block;}
 @keyframes sd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .det-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
-.det-fn{font-family:var(--display);font-size:38px;color:var(--accent);line-height:1;}
-.det-rt{font-family:var(--display);font-size:26px;line-height:1.1;margin-top:4px;}
+.det-fn{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--accent-bright);line-height:1;}
+.det-rt{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1.1;margin-top:4px;color:var(--text-strong);}
 .det-actions{display:flex;gap:8px;}
-.det-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:var(--mono);font-size:11px;transition:all .2s;}
-.det-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.det-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;transition:all .2s;}
+.det-btn:hover{border-color:var(--accent2-bright);color:var(--accent2-bright);}
 .det-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
-.di .dil{font-size:9px;color:var(--muted);font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
-.di .div{font-family:var(--mono);font-size:13px;}
-.div.ac{color:var(--accent);}.div.or{color:var(--accent2);}.div.gr{color:var(--green);}
+.di .dil{font-size:9px;color:var(--muted);font-family:'Share Tech Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+.di .div{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text);}
+.div.ac{color:var(--accent-bright);}
+.div.or{color:var(--accent2-bright);}
+.div.gr{color:var(--green-bright);}
 .del-bar{margin-top:18px;}
-.del-bar-lbl{font-size:9px;color:var(--muted);font-family:var(--mono);letter-spacing:2px;margin-bottom:6px;text-transform:uppercase;}
+.del-bar-lbl{font-size:9px;color:var(--muted);font-family:'Share Tech Mono',monospace;letter-spacing:2px;margin-bottom:6px;text-transform:uppercase;}
 .del-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
-.del-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:3px;transition:width .6s ease;}
-.del-pts{display:flex;justify-content:space-between;margin-top:5px;font-family:var(--mono);font-size:10px;color:var(--muted);}
+.del-fill{height:100%;background:linear-gradient(90deg,var(--accent-bright),var(--green-bright));border-radius:3px;transition:width .6s ease;}
+.del-pts{display:flex;justify-content:space-between;margin-top:5px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);}
 
-/* STATS */
+/* ── STATS ── */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:16px;}
-.scard{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
-.scard h3{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
-.bignum{font-family:var(--display);font-size:48px;color:var(--accent);line-height:1;}
+.scard{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:18px 20px;box-shadow:var(--shadow);}
+.scard h3{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.bignum{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--accent-bright);line-height:1;}
 .subnum{font-size:11px;color:var(--muted);margin-top:3px;}
 .list-items{list-style:none;}
 .list-items li{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
 .list-items li:last-child{border-bottom:none;}
-.li-cnt{font-family:var(--mono);color:var(--accent);}
+.li-cnt{font-family:'Share Tech Mono',monospace;color:var(--accent-bright);}
 
-/* FORM */
-.form-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;}
-.form-card h2{font-family:var(--display);font-size:36px;color:var(--accent);margin-bottom:20px;}
+/* ── FORM ── */
+.form-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:var(--shadow);}
+.form-card h2{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent-bright);margin-bottom:20px;}
 .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
 .fg{display:flex;flex-direction:column;gap:5px;}
-.fg label{font-size:9px;font-family:var(--mono);letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-.fg input,.fg select,.fg textarea{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:9px 11px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .2s;width:100%;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);}
+.fg label{font-size:9px;font-family:'Share Tech Mono',monospace;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.fg input,.fg select,.fg textarea{
+  background:var(--s2);border:1px solid var(--border);border-radius:6px;
+  padding:9px 11px;color:var(--text);font-family:'Share Tech Mono',monospace;
+  font-size:12px;outline:none;transition:border-color .2s;width:100%;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent-bright);}
 .fg select option{background:var(--s2);}
 .fg.full{grid-column:1/-1;}
 .fg textarea{resize:vertical;min-height:60px;}
 .form-btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
-.btn-primary{padding:11px 28px;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-family:var(--display);font-size:20px;letter-spacing:2px;cursor:pointer;transition:opacity .2s;}
+.btn-primary{padding:11px 28px;background:var(--accent-bright);color:#fff;border:none;border-radius:6px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer;transition:opacity .2s;}
 .btn-primary:hover{opacity:.85;}
-.btn-secondary{padding:11px 20px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .2s;}
-.btn-secondary:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn-secondary{padding:11px 20px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--accent2-bright);color:var(--accent2-bright);}
 
-/* DATA TAB */
-.io-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
-.io-card h2{font-family:var(--display);font-size:30px;color:var(--text);margin-bottom:6px;}
+/* ── DATA TAB ── */
+.io-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow);}
+.io-card h2{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--text-strong);margin-bottom:6px;}
 .io-card p{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
 .io-btns{display:flex;gap:10px;flex-wrap:wrap;}
-.btn-io{padding:9px 20px;border-radius:6px;font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--s2);color:var(--text);}
-.btn-io:hover{border-color:var(--accent);color:var(--accent);}
-.btn-io.danger:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn-io{padding:9px 20px;border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--s2);color:var(--text);}
+.btn-io:hover{border-color:var(--accent-bright);color:var(--accent-bright);}
+.btn-io.danger:hover{border-color:var(--accent2-bright);color:var(--accent2-bright);}
 
-/* EMPTY */
-.empty{text-align:center;padding:60px 20px;color:var(--muted);font-family:var(--mono);}
+/* ── EMPTY ── */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);font-family:'Share Tech Mono',monospace;}
 .empty .eicon{font-size:36px;margin-bottom:12px;}
 .empty p{font-size:12px;}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:var(--bg);font-family:var(--mono);font-size:12px;padding:10px 24px;border-radius:6px;z-index:999;transition:transform .3s ease;white-space:nowrap;font-weight:bold;letter-spacing:1px;}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green-bright);color:#fff;font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 24px;border-radius:6px;z-index:999;transition:transform .3s ease;white-space:nowrap;font-weight:bold;letter-spacing:1px;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-.toast.err{background:var(--accent2);}
+.toast.err{background:var(--accent2-bright);}
 
-/* DIALOG */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;}
+/* ── DIALOG ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;}
 .overlay.open{display:flex;}
-.dialog{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:340px;width:90%;}
-.dialog h3{font-family:var(--display);font-size:28px;color:var(--accent2);margin-bottom:10px;}
+.dialog{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:340px;width:90%;box-shadow:var(--shadow);}
+.dialog h3{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent2-bright);margin-bottom:10px;}
 .dialog p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
 .dialog-btns{display:flex;gap:10px;}
 
+/* ── MOBILE ── */
 @media(max-width:600px){
   .hdr-title{font-size:38px;}.pill .pv{font-size:22px;}
   .search{width:100%;margin-left:0;}
@@ -179,10 +247,18 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
   .det-grid{grid-template-columns:1fr 1fr;}
   .hdr{flex-direction:column;align-items:flex-start;}
   .hdr-pills{gap:8px;}
+  .theme-toggle{top:10px;right:10px;}
 }
 </style>
 </head>
 <body>
+
+<!-- THEME TOGGLE -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
+  <span id="theme-label">DARK</span>
+</button>
+
 <div class="app">
 
   <!-- HEADER -->
@@ -298,7 +374,7 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
   <div id="t-data" style="display:none">
     <div class="io-card">
       <h2>GitHub Sync</h2>
-      <p id="sync-status-text">Connect GitHub above to enable automatic cloud sync. Your flights are stored in a private <code style="color:var(--accent)">FlightTracker-data</code> repo in your own GitHub account.</p>
+      <p id="sync-status-text">Connect GitHub above to enable automatic cloud sync. Your flights are stored in a private <code style="color:var(--accent-bright)">FlightTracker-data</code> repo in your own GitHub account.</p>
       <div class="io-btns">
         <button class="btn-io" onclick="ghPull()">⬇ Pull from GitHub</button>
         <button class="btn-io" onclick="ghPush()">⬆ Push to GitHub</button>
@@ -347,16 +423,31 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
 
 <script>
 // ─────────────────────────────────────────────
-// CONFIG — fill these in after setup
+// THEME
+// ─────────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  document.getElementById('theme-label').textContent=next.toUpperCase();
+  localStorage.setItem('ft_theme',next);
+}
+(function(){
+  const saved=localStorage.getItem('ft_theme')||'dark';
+  document.documentElement.setAttribute('data-theme',saved);
+  // label will be set after DOM loads
+  window.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('theme-label').textContent=saved.toUpperCase();
+  });
+})();
+
+// ─────────────────────────────────────────────
+// CONFIG
 // ─────────────────────────────────────────────
 const CONFIG = {
-  // Your GitHub OAuth App Client ID (public, safe to expose)
   CLIENT_ID: 'Ov23lioitFz0HYRVyUNX',
-  // URL of your deployed Cloudflare Worker
   WORKER_URL: 'https://flighttracker-oauth.r-carbonell96.workers.dev',
-  // The repo name that will be created in each user's GitHub account
   REPO_NAME: 'FlightTracker',
-  // The file path inside the repo
   FILE_PATH: 'flights.json',
 };
 
@@ -366,27 +457,24 @@ const CONFIG = {
 let flights = [];
 let ghToken = localStorage.getItem('gh_token') || null;
 let ghUser  = JSON.parse(localStorage.getItem('gh_user') || 'null');
-let ghFileSha = null; // needed for GitHub file updates
+let ghFileSha = null;
 let filterS = 'all', sortKey = 'depDate', sortDir = -1, openIdx = null;
 
 // ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
 async function init() {
-  // Handle OAuth callback (?code=...)
   const params = new URLSearchParams(location.search);
   const code = params.get('code');
   if (code) {
-    history.replaceState({}, '', location.pathname); // clean URL
+    history.replaceState({}, '', location.pathname);
     await handleOAuthCallback(code);
     return;
   }
-
   loadLocal();
-
   if (ghToken) {
     await fetchGhUser();
-    await ghPull(); // auto-sync on load
+    await ghPull();
   } else {
     renderGhBar();
     render();
@@ -394,61 +482,59 @@ async function init() {
 }
 
 // ─────────────────────────────────────────────
-// LOCAL STORAGE FALLBACK
+// LOCAL STORAGE
 // ─────────────────────────────────────────────
-function loadLocal() {
-  const raw = localStorage.getItem('FlightTracker_v2');
-  flights = raw ? JSON.parse(raw) : [];
+function loadLocal(){
+  const raw=localStorage.getItem('FlightTracker_v2');
+  flights=raw?JSON.parse(raw):[];
 }
-function saveLocal() {
-  localStorage.setItem('FlightTracker_v2', JSON.stringify(flights));
+function saveLocal(){
+  localStorage.setItem('FlightTracker_v2',JSON.stringify(flights));
 }
 
 // ─────────────────────────────────────────────
 // GITHUB OAUTH
 // ─────────────────────────────────────────────
-function ghConnect() {
-  const redirectUri = encodeURIComponent(location.href.split('?')[0]);
-  const scope = encodeURIComponent('repo');
-  location.href = `https://github.com/login/oauth/authorize?client_id=${CONFIG.CLIENT_ID}&scope=${scope}&redirect_uri=${redirectUri}`;
+function ghConnect(){
+  const redirectUri=encodeURIComponent(location.href.split('?')[0]);
+  const scope=encodeURIComponent('repo');
+  location.href=`https://github.com/login/oauth/authorize?client_id=${CONFIG.CLIENT_ID}&scope=${scope}&redirect_uri=${redirectUri}`;
 }
 
-async function handleOAuthCallback(code) {
-  setSyncing(true, 'Authenticating with GitHub…');
-  try {
-    const res = await fetch(`${CONFIG.WORKER_URL}/exchange`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code })
+async function handleOAuthCallback(code){
+  setSyncing(true,'Authenticating with GitHub…');
+  try{
+    const res=await fetch(`${CONFIG.WORKER_URL}/exchange`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({code})
     });
-    const data = await res.json();
-    if (!data.access_token) throw new Error('No token received');
-    ghToken = data.access_token;
-    localStorage.setItem('gh_token', ghToken);
+    const data=await res.json();
+    if(!data.access_token)throw new Error('No token received');
+    ghToken=data.access_token;
+    localStorage.setItem('gh_token',ghToken);
     await fetchGhUser();
     await ghEnsureRepo();
     await ghPull();
     toast('GITHUB CONNECTED');
-  } catch (e) {
+  }catch(e){
     console.error(e);
-    toast('GITHUB AUTH FAILED', 'err');
+    toast('GITHUB AUTH FAILED','err');
     renderGhBar();
     render();
   }
 }
 
-async function fetchGhUser() {
-  try {
-    const res = await ghAPI('GET', 'https://api.github.com/user');
-    ghUser = { login: res.login, avatar: res.avatar_url, name: res.name };
-    localStorage.setItem('gh_user', JSON.stringify(ghUser));
-  } catch(e) {
-    ghDisconnect();
-  }
+async function fetchGhUser(){
+  try{
+    const res=await ghAPI('GET','https://api.github.com/user');
+    ghUser={login:res.login,avatar:res.avatar_url,name:res.name};
+    localStorage.setItem('gh_user',JSON.stringify(ghUser));
+  }catch(e){ ghDisconnect(); }
 }
 
-function ghDisconnect() {
-  ghToken = null; ghUser = null; ghFileSha = null;
+function ghDisconnect(){
+  ghToken=null;ghUser=null;ghFileSha=null;
   localStorage.removeItem('gh_token');
   localStorage.removeItem('gh_user');
   renderGhBar();
@@ -456,153 +542,113 @@ function ghDisconnect() {
 }
 
 // ─────────────────────────────────────────────
-// GITHUB API HELPER
+// GITHUB API
 // ─────────────────────────────────────────────
-async function ghAPI(method, url, body) {
-  const opts = {
-    method,
-    headers: {
-      'Authorization': `Bearer ${ghToken}`,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    }
-  };
-  if (body) {
-    opts.headers['Content-Type'] = 'application/json';
-    opts.body = JSON.stringify(body);
-  }
-  const res = await fetch(url, opts);
-  if (res.status === 401) { ghDisconnect(); throw new Error('Unauthorized'); }
-  if (res.status === 204) return null;
+async function ghAPI(method,url,body){
+  const opts={method,headers:{'Authorization':`Bearer ${ghToken}`,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};
+  if(body){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(body);}
+  const res=await fetch(url,opts);
+  if(res.status===401){ghDisconnect();throw new Error('Unauthorized');}
+  if(res.status===204)return null;
   return res.json();
 }
-
-function repoURL(path = '') {
+function repoURL(path=''){
   return `https://api.github.com/repos/${ghUser.login}/${CONFIG.REPO_NAME}/contents/${path}`;
 }
 
-// ─────────────────────────────────────────────
-// REPO MANAGEMENT
-// ─────────────────────────────────────────────
-async function ghEnsureRepo() {
-  // Check if repo exists
-  try {
-    await ghAPI('GET', `https://api.github.com/repos/${ghUser.login}/${CONFIG.REPO_NAME}`);
-  } catch(e) {
-    // Create it as private
-    await ghAPI('POST', 'https://api.github.com/user/repos', {
-      name: CONFIG.REPO_NAME,
-      private: true,
-      description: 'FlightTracker data — managed automatically by FlightTracker app',
-      auto_init: true
+async function ghEnsureRepo(){
+  try{
+    await ghAPI('GET',`https://api.github.com/repos/${ghUser.login}/${CONFIG.REPO_NAME}`);
+  }catch(e){
+    await ghAPI('POST','https://api.github.com/user/repos',{
+      name:CONFIG.REPO_NAME,private:true,
+      description:'FlightTracker data — managed automatically by FlightTracker app',
+      auto_init:true
     });
-    await new Promise(r => setTimeout(r, 1500)); // wait for repo init
+    await new Promise(r=>setTimeout(r,1500));
   }
 }
 
-// ─────────────────────────────────────────────
-// SYNC: PULL & PUSH
-// ─────────────────────────────────────────────
-async function ghPull() {
-  if (!ghToken || !ghUser) { render(); return; }
-  setSyncing(true, 'Pulling from GitHub…');
-  try {
-    const data = await ghAPI('GET', repoURL(CONFIG.FILE_PATH));
-    ghFileSha = data.sha;
-    const decoded = JSON.parse(atob(data.content.replace(/\n/g, '')));
-    flights = decoded;
-    saveLocal();
-    renderGhBar(true);
-    render();
-    toast('SYNCED FROM GITHUB');
-  } catch(e) {
-    if (e.message && e.message.includes('404')) {
-      // File doesn't exist yet — push local data
-      await ghPush(true);
-    } else {
-      renderGhBar(true);
-      render();
-    }
+async function ghPull(){
+  if(!ghToken||!ghUser){render();return;}
+  setSyncing(true,'Pulling from GitHub…');
+  try{
+    const data=await ghAPI('GET',repoURL(CONFIG.FILE_PATH));
+    ghFileSha=data.sha;
+    flights=JSON.parse(atob(data.content.replace(/\n/g,'')));
+    saveLocal();renderGhBar(true);render();toast('SYNCED FROM GITHUB');
+  }catch(e){
+    if(e.message&&e.message.includes('404'))await ghPush(true);
+    else{renderGhBar(true);render();}
   }
 }
 
-async function ghPush(silent = false) {
-  if (!ghToken || !ghUser) { toast('Connect GitHub first', 'err'); return; }
-  setSyncing(true, 'Pushing to GitHub…');
-  try {
+async function ghPush(silent=false){
+  if(!ghToken||!ghUser){toast('Connect GitHub first','err');return;}
+  setSyncing(true,'Pushing to GitHub…');
+  try{
     await ghEnsureRepo();
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(flights, null, 2))));
-    const body = {
-      message: `FlightTracker sync — ${new Date().toISOString()}`,
-      content,
-      ...(ghFileSha ? { sha: ghFileSha } : {})
-    };
-    const res = await ghAPI('PUT', repoURL(CONFIG.FILE_PATH), body);
-    ghFileSha = res.content.sha;
-    saveLocal();
-    renderGhBar(true);
-    if (!silent) toast('PUSHED TO GITHUB');
-  } catch(e) {
-    console.error(e);
-    toast('PUSH FAILED', 'err');
-    renderGhBar(true);
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(flights,null,2))));
+    const body={message:`FlightTracker sync — ${new Date().toISOString()}`,content,...(ghFileSha?{sha:ghFileSha}:{})};
+    const res=await ghAPI('PUT',repoURL(CONFIG.FILE_PATH),body);
+    ghFileSha=res.content.sha;
+    saveLocal();renderGhBar(true);
+    if(!silent)toast('PUSHED TO GITHUB');
+  }catch(e){
+    console.error(e);toast('PUSH FAILED','err');renderGhBar(true);
   }
 }
 
 // ─────────────────────────────────────────────
 // GITHUB BAR UI
 // ─────────────────────────────────────────────
-function setSyncing(on, msg = '') {
-  const dot = document.getElementById('sync-dot');
-  const sub = document.getElementById('gh-sub');
-  dot.className = 'sync-dot' + (on ? ' spin' : (ghToken ? '' : ' off'));
-  if (msg) sub.textContent = msg;
+function setSyncing(on,msg=''){
+  const dot=document.getElementById('sync-dot');
+  const sub=document.getElementById('gh-sub');
+  dot.className='sync-dot'+(on?' spin':(ghToken?'':' off'));
+  if(msg)sub.textContent=msg;
 }
-
-function renderGhBar(connected = !!ghToken) {
-  const bar = document.getElementById('gh-bar');
-  const dot = document.getElementById('sync-dot');
-  const name = document.getElementById('gh-name');
-  const sub = document.getElementById('gh-sub');
-  const actions = bar.querySelector('.gh-actions');
-
-  if (connected && ghUser) {
-    bar.className = 'gh-bar connected';
-    dot.className = 'sync-dot';
-    name.innerHTML = `<img class="gh-avatar" src="${ghUser.avatar}&s=64"> @${ghUser.login}`;
-    sub.textContent = `Synced to github.com/${ghUser.login}/${CONFIG.REPO_NAME} · ${flights.length} flights`;
-    actions.innerHTML = `
+function renderGhBar(connected=!!ghToken){
+  const bar=document.getElementById('gh-bar');
+  const dot=document.getElementById('sync-dot');
+  const name=document.getElementById('gh-name');
+  const sub=document.getElementById('gh-sub');
+  const actions=bar.querySelector('.gh-actions');
+  if(connected&&ghUser){
+    bar.className='gh-bar connected';
+    dot.className='sync-dot';
+    name.innerHTML=`<img class="gh-avatar" src="${ghUser.avatar}&s=64"> @${ghUser.login}`;
+    sub.textContent=`Synced to github.com/${ghUser.login}/${CONFIG.REPO_NAME} · ${flights.length} flights`;
+    actions.innerHTML=`
       <button class="btn-gh" onclick="ghPull()">⬇ Pull</button>
       <button class="btn-gh" onclick="ghPush()">⬆ Push</button>
       <button class="btn-gh danger" onclick="ghDisconnect()">Disconnect</button>`;
-  } else {
-    bar.className = 'gh-bar';
-    dot.className = 'sync-dot off';
-    name.textContent = 'Not connected to GitHub';
-    sub.textContent = 'Connect to sync your flights across all devices';
-    actions.innerHTML = `<button class="btn-gh primary" onclick="ghConnect()">Connect GitHub</button>`;
+  }else{
+    bar.className='gh-bar';
+    dot.className='sync-dot off';
+    name.textContent='Not connected to GitHub';
+    sub.textContent='Connect to sync your flights across all devices';
+    actions.innerHTML=`<button class="btn-gh primary" onclick="ghConnect()">Connect GitHub</button>`;
   }
 }
 
 // ─────────────────────────────────────────────
 // UTILS
 // ─────────────────────────────────────────────
-function toMins(t){ if(!t||t==='-')return null; const[h,m]=t.split(':').map(Number); return h*60+m; }
-function delayMins(s,a){ const sm=toMins(s),am=toMins(a); if(sm==null||am==null)return 0; return Math.max(0,am-sm); }
-function isDelayed(s,a){ return delayMins(s,a)>5; }
-function fmtDate(d){ if(!d)return '-'; const[y,m,day]=d.split('-'); return `${day}/${m}/${y}`; }
-function sbClass(s){ return s==='Flown'?'sb-flown':s==='Upcoming'?'sb-upcoming':'sb-cancelled'; }
-
+function toMins(t){if(!t||t==='-')return null;const[h,m]=t.split(':').map(Number);return h*60+m;}
+function delayMins(s,a){const sm=toMins(s),am=toMins(a);if(sm==null||am==null)return 0;return Math.max(0,am-sm);}
+function isDelayed(s,a){return delayMins(s,a)>5;}
+function fmtDate(d){if(!d)return '-';const[y,m,day]=d.split('-');return `${day}/${m}/${y}`;}
+function sbClass(s){return s==='Flown'?'sb-flown':s==='Upcoming'?'sb-upcoming':'sb-cancelled';}
 function calcStats(){
   const airports=new Set([...flights.map(f=>f.dep),...flights.map(f=>f.arr)].filter(Boolean));
   const airlines=new Set(flights.map(f=>f.airline).filter(Boolean));
   const delayed=flights.filter(f=>isDelayed(f.sDep,f.aDep)||isDelayed(f.sArr,f.aArr));
   const delayRate=flights.length?Math.round(delayed.length/flights.length*100):0;
-  return {airports:airports.size,airlines:airlines.size,delayRate};
+  return{airports:airports.size,airlines:airlines.size,delayRate};
 }
-
 function updateHeader(){
-  const {airports,airlines,delayRate}=calcStats();
+  const{airports,airlines,delayRate}=calcStats();
   document.getElementById('p-total').textContent=flights.length;
   document.getElementById('p-airlines').textContent=airlines;
   document.getElementById('p-airports').textContent=airports;
@@ -610,7 +656,7 @@ function updateHeader(){
 }
 
 // ─────────────────────────────────────────────
-// RENDER FLIGHTS
+// RENDER
 // ─────────────────────────────────────────────
 function render(){
   const q=document.getElementById('search').value.toLowerCase();
@@ -619,11 +665,11 @@ function render(){
     const mq=!q||[f.num,f.dep,f.arr,f.airline,f.comment,f.seat,f.plane,f.res].join(' ').toLowerCase().includes(q);
     return ms&&mq;
   });
-  list.sort((a,b)=>{ let av=a[sortKey]||'',bv=b[sortKey]||''; return av<bv?-sortDir:av>bv?sortDir:0; });
+  list.sort((a,b)=>{let av=a[sortKey]||'',bv=b[sortKey]||'';return av<bv?-sortDir:av>bv?sortDir:0;});
   const tbody=document.getElementById('tbody');
   if(!list.length){
     tbody.innerHTML=`<tr><td colspan="9"><div class="empty"><div class="eicon">✈</div><p>No flights found.</p></div></td></tr>`;
-    updateHeader(); return;
+    updateHeader();return;
   }
   tbody.innerHTML=list.map(f=>{
     const idx=flights.indexOf(f);
@@ -635,34 +681,34 @@ function render(){
         <span class="arrow">›</span>
         <div><div class="iata arr-iata">${f.arr}</div><div class="term">${f.arrT||'-'}</div></div>
       </div></td>
-      <td style="font-family:var(--mono);font-size:12px">${fmtDate(f.depDate)}</td>
+      <td style="font-family:'Share Tech Mono',monospace;font-size:12px">${fmtDate(f.depDate)}</td>
       <td><div class="time-s">${f.sDep||'-'}</div>${f.aDep&&f.aDep!==f.sDep?`<div class="time-a ${dDep?'delayed':'ontime'}">${f.aDep}</div>`:''}</td>
       <td><div class="time-s">${f.sArr||'-'}</div>${f.aArr&&f.aArr!==f.sArr?`<div class="time-a ${dArr?'delayed':'ontime'}">${f.aArr}</div>`:''}</td>
       <td><span class="seat">${f.seat||'-'}</span></td>
       <td><span class="airl">${f.airline||'-'}</span></td>
-      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${f.plane||'-'}</td>
+      <td style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted)">${f.plane||'-'}</td>
       <td><span class="sbadge ${sbClass(f.status)}">${f.status}</span></td>
     </tr>`;
   }).join('');
   updateHeader();
 }
 
-function sortBy(k){ if(sortKey===k)sortDir*=-1; else{sortKey=k;sortDir=-1;} render(); }
-function setF(s,btn){ filterS=s; document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); render(); }
+function sortBy(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}render();}
+function setF(s,btn){filterS=s;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render();}
 
 // ─────────────────────────────────────────────
-// DETAIL PANEL
+// DETAIL
 // ─────────────────────────────────────────────
 function toggleDetail(idx){
   const panel=document.getElementById('detail');
-  if(openIdx===idx){ panel.classList.remove('open'); openIdx=null; render(); return; }
-  openIdx=idx; render();
+  if(openIdx===idx){panel.classList.remove('open');openIdx=null;render();return;}
+  openIdx=idx;render();
   const f=flights[idx];
   const dDep=delayMins(f.sDep,f.aDep),dArr=delayMins(f.sArr,f.aArr);
   const totalDelay=dDep+dArr;
   let dur='—';
   const sm=toMins(f.sDep),em=toMins(f.sArr);
-  if(sm!=null&&em!=null){ const d=((em-sm)+1440)%1440; dur=`${Math.floor(d/60)}h ${d%60}m`; }
+  if(sm!=null&&em!=null){const d=((em-sm)+1440)%1440;dur=`${Math.floor(d/60)}h ${d%60}m`;}
   panel.innerHTML=`
     <div class="det-hdr">
       <div><div class="det-fn">${f.num}</div><div class="det-rt">${f.dep} → ${f.arr}</div></div>
@@ -687,7 +733,7 @@ function toggleDetail(idx){
       <div class="di"><div class="dil">Actual Arr.</div><div class="div ${dArr>5?'or':dArr===0?'':'gr'}">${f.aArr||'—'}${dArr>5?` (+${dArr}m)`:''}</div></div>
       <div class="di"><div class="dil">Duration</div><div class="div">${dur}</div></div>
       <div class="di"><div class="dil">Status</div><div class="div"><span class="sbadge ${sbClass(f.status)}">${f.status}</span></div></div>
-      ${f.comment?`<div class="di" style="grid-column:1/-1"><div class="dil">Notes</div><div class="div" style="white-space:normal;font-family:var(--body)">${f.comment}</div></div>`:''}
+      ${f.comment?`<div class="di" style="grid-column:1/-1"><div class="dil">Notes</div><div class="div" style="white-space:normal;font-family:'Outfit',sans-serif">${f.comment}</div></div>`:''}
     </div>
     ${totalDelay>0?`<div class="del-bar">
       <div class="del-bar-lbl">Total Delay — ${totalDelay} minutes</div>
@@ -702,16 +748,14 @@ function toggleDetail(idx){
 // FORM
 // ─────────────────────────────────────────────
 function tab(name,btn){
-  ['flights','stats','add','data'].forEach(t=>{ document.getElementById('t-'+t).style.display=t===name?'block':'none'; });
+  ['flights','stats','add','data'].forEach(t=>{document.getElementById('t-'+t).style.display=t===name?'block':'none';});
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(name==='stats')renderStats();
   if(name==='flights')render();
 }
-
-function gv(id){ return document.getElementById(id).value.trim(); }
-function sv(id,v){ document.getElementById(id).value=v||''; }
-
+function gv(id){return document.getElementById(id).value.trim();}
+function sv(id,v){document.getElementById(id).value=v||'';}
 function clearForm(){
   ['f-num','f-dep','f-dept','f-arr','f-arrt','f-seat','f-airline','f-plane','f-res',
    'f-depdate','f-arrdate','f-sdep','f-adep','f-sarr','f-aarr','f-comment'].forEach(id=>sv(id,''));
@@ -719,9 +763,8 @@ function clearForm(){
   document.getElementById('edit-idx').value='';
   document.getElementById('form-title').textContent='LOG NEW FLIGHT';
 }
-
 function editFlight(idx){
-  const f=flights[idx]; clearForm();
+  const f=flights[idx];clearForm();
   sv('f-num',f.num);sv('f-dep',f.dep);sv('f-dept',f.depT);sv('f-arr',f.arr);sv('f-arrt',f.arrT);
   sv('f-seat',f.seat);sv('f-airline',f.airline);sv('f-plane',f.plane);sv('f-res',f.res);
   sv('f-depdate',f.depDate);sv('f-arrdate',f.arrDate);
@@ -732,18 +775,16 @@ function editFlight(idx){
   tab('add',document.querySelectorAll('.tab-btn')[2]);
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
 async function saveFlight(){
   const num=gv('f-num'),dep=gv('f-dep'),arr=gv('f-arr');
-  if(!num||!dep||!arr){ toast('Flight #, departure and destination are required','err'); return; }
+  if(!num||!dep||!arr){toast('Flight #, departure and destination are required','err');return;}
   const f={num,dep,depT:gv('f-dept'),arr,arrT:gv('f-arrt'),seat:gv('f-seat'),airline:gv('f-airline'),
     plane:gv('f-plane'),res:gv('f-res'),depDate:gv('f-depdate'),arrDate:gv('f-arrdate'),
     sDep:gv('f-sdep'),aDep:gv('f-adep'),sArr:gv('f-sarr'),aArr:gv('f-aarr'),
     comment:gv('f-comment'),status:gv('f-status')};
   const eidx=document.getElementById('edit-idx').value;
-  if(eidx!=='')flights[parseInt(eidx)]=f; else flights.unshift(f);
-  saveLocal();
-  clearForm();
+  if(eidx!=='')flights[parseInt(eidx)]=f;else flights.unshift(f);
+  saveLocal();clearForm();
   tab('flights',document.querySelectorAll('.tab-btn')[0]);
   render();
   toast(eidx!==''?'FLIGHT UPDATED — syncing…':'FLIGHT LOGGED — syncing…');
@@ -758,9 +799,9 @@ function askDelete(idx){
   openDialog(`Delete flight ${f.num} (${f.dep}→${f.arr} on ${fmtDate(f.depDate)})?`,()=>deleteFlight(idx));
 }
 async function deleteFlight(idx){
-  flights.splice(idx,1); saveLocal(); openIdx=null;
+  flights.splice(idx,1);saveLocal();openIdx=null;
   document.getElementById('detail').classList.remove('open');
-  render(); toast('FLIGHT DELETED — syncing…');
+  render();toast('FLIGHT DELETED — syncing…');
   await ghPush();
 }
 
@@ -777,11 +818,11 @@ function renderStats(){
   const avg=delays.length?Math.round(delays.reduce((a,b)=>a+b,0)/delays.length):0;
   document.getElementById('s-avgdelay').textContent=avg+'m';
   document.getElementById('s-delayed').textContent=`${delays.length} of ${flights.length} flights delayed`;
-  const rows={};flights.forEach(f=>{ if(f.seat){ const r=f.seat.replace(/[A-Z]/g,''); rows[r]=(rows[r]||0)+1; }});
+  const rows={};flights.forEach(f=>{if(f.seat){const r=f.seat.replace(/[A-Z]/g,'');rows[r]=(rows[r]||0)+1;}});
   const topRow=Object.entries(rows).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById('s-seat').textContent=topRow?'Row '+topRow[0]:'—';
   document.getElementById('s-seat-sub').textContent=topRow?`${topRow[1]}× flown`:'';
-  const countList=(map,el)=>{ document.getElementById(el).innerHTML=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>`<li><span>${k}</span><span class="li-cnt">${v}×</span></li>`).join(''); };
+  const countList=(map,el)=>{document.getElementById(el).innerHTML=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>`<li><span>${k}</span><span class="li-cnt">${v}×</span></li>`).join('');};
   const airm={},routem={},planem={};
   flights.forEach(f=>{
     if(f.airline)airm[f.airline]=(airm[f.airline]||0)+1;
@@ -805,7 +846,7 @@ function exportCSV(){
   dl(new Blob([rows.join('\n')],{type:'text/csv'}),'FlightTracker.csv');
   toast('CSV EXPORTED');
 }
-function dl(blob,name){ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click(); }
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();}
 
 function importJSON(inp){
   const file=inp.files[0];if(!file)return;
@@ -816,14 +857,13 @@ function importJSON(inp){
       if(!Array.isArray(data))throw new Error();
       const existing=new Set(flights.map(f=>f.num+'|'+f.depDate));
       let added=0;
-      data.forEach(f=>{ const k=f.num+'|'+f.depDate;if(!existing.has(k)){flights.unshift(f);added++;} });
+      data.forEach(f=>{const k=f.num+'|'+f.depDate;if(!existing.has(k)){flights.unshift(f);added++;}});
       saveLocal();render();toast(`IMPORTED ${added} NEW FLIGHTS`);
       await ghPush();
     }catch(err){toast('INVALID JSON FILE','err');}
   };
   r.readAsText(file);inp.value='';
 }
-
 function importCSV(inp){
   const file=inp.files[0];if(!file)return;
   const r=new FileReader();
@@ -833,13 +873,13 @@ function importCSV(inp){
       const header=lines[0].split(/[\t,]/);
       const colMap={};
       const mapping={'Flight Number':'num','Departure':'dep','Terminal Departure':'depT','Destination':'arr','Terminal Destination':'arrT','Seat':'seat','Company':'airline','Departing Date':'depDate','Arrival Date':'arrDate','Original Departing Time':'sDep','Actual Departing Time':'aDep','Original Arrival Time':'sArr','Actual Arrival Time':'aArr','Comments':'comment','Reservation':'res','Status':'status','Plane':'plane'};
-      header.forEach((h,i)=>{ const k=mapping[h.trim()];if(k)colMap[k]=i; });
+      header.forEach((h,i)=>{const k=mapping[h.trim()];if(k)colMap[k]=i;});
       const existing=new Set(flights.map(f=>f.num+'|'+f.depDate));
       let added=0;
       lines.slice(1).forEach(line=>{
         const cells=line.split(/[\t,]/);const f={};
-        Object.entries(colMap).forEach(([k,i])=>{ f[k]=(cells[i]||'').trim(); });
-        ['depDate','arrDate'].forEach(dk=>{ if(f[dk]&&f[dk].includes('/')){ const[d,m,y]=f[dk].split('/');f[dk]=`${y}-${m}-${d}`; }});
+        Object.entries(colMap).forEach(([k,i])=>{f[k]=(cells[i]||'').trim();});
+        ['depDate','arrDate'].forEach(dk=>{if(f[dk]&&f[dk].includes('/')){const[d,m,y]=f[dk].split('/');f[dk]=`${y}-${m}-${d}`;}});
         const key=f.num+'|'+f.depDate;
         if(f.num&&!existing.has(key)){flights.unshift(f);added++;}
       });
@@ -854,13 +894,12 @@ function importCSV(inp){
 // DIALOG
 // ─────────────────────────────────────────────
 let dialogCb=null;
-function openDialog(msg,cb){ document.getElementById('dialog-msg').textContent=msg;dialogCb=cb;document.getElementById('overlay').classList.add('open'); }
-function closeDialog(){ document.getElementById('overlay').classList.remove('open');dialogCb=null; }
-document.getElementById('dialog-ok').onclick=()=>{ if(dialogCb)dialogCb();closeDialog(); };
-document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('overlay'))closeDialog(); });
-
+function openDialog(msg,cb){document.getElementById('dialog-msg').textContent=msg;dialogCb=cb;document.getElementById('overlay').classList.add('open');}
+function closeDialog(){document.getElementById('overlay').classList.remove('open');dialogCb=null;}
+document.getElementById('dialog-ok').onclick=()=>{if(dialogCb)dialogCb();closeDialog();};
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeDialog();});
 function confirmClear(){
-  openDialog('This will delete ALL flights permanently. Are you sure?',async ()=>{
+  openDialog('This will delete ALL flights permanently. Are you sure?',async()=>{
     flights=[];saveLocal();render();toast('ALL DATA CLEARED','err');
     await ghPush();
   });
