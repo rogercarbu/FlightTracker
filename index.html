@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>FlightLog</title>
+<title>FlightTracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -298,7 +298,7 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
   <div id="t-data" style="display:none">
     <div class="io-card">
       <h2>GitHub Sync</h2>
-      <p id="sync-status-text">Connect GitHub above to enable automatic cloud sync. Your flights are stored in a private <code style="color:var(--accent)">flightlog-data</code> repo in your own GitHub account.</p>
+      <p id="sync-status-text">Connect GitHub above to enable automatic cloud sync. Your flights are stored in a private <code style="color:var(--accent)">FlightTracker-data</code> repo in your own GitHub account.</p>
       <div class="io-btns">
         <button class="btn-io" onclick="ghPull()">⬇ Pull from GitHub</button>
         <button class="btn-io" onclick="ghPush()">⬆ Push to GitHub</button>
@@ -397,11 +397,11 @@ async function init() {
 // LOCAL STORAGE FALLBACK
 // ─────────────────────────────────────────────
 function loadLocal() {
-  const raw = localStorage.getItem('flightlog_v2');
+  const raw = localStorage.getItem('FlightTracker_v2');
   flights = raw ? JSON.parse(raw) : [];
 }
 function saveLocal() {
-  localStorage.setItem('flightlog_v2', JSON.stringify(flights));
+  localStorage.setItem('FlightTracker_v2', JSON.stringify(flights));
 }
 
 // ─────────────────────────────────────────────
@@ -493,7 +493,7 @@ async function ghEnsureRepo() {
     await ghAPI('POST', 'https://api.github.com/user/repos', {
       name: CONFIG.REPO_NAME,
       private: true,
-      description: 'FlightLog data — managed automatically by FlightLog app',
+      description: 'FlightTracker data — managed automatically by FlightTracker app',
       auto_init: true
     });
     await new Promise(r => setTimeout(r, 1500)); // wait for repo init
@@ -533,7 +533,7 @@ async function ghPush(silent = false) {
     await ghEnsureRepo();
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(flights, null, 2))));
     const body = {
-      message: `FlightLog sync — ${new Date().toISOString()}`,
+      message: `FlightTracker sync — ${new Date().toISOString()}`,
       content,
       ...(ghFileSha ? { sha: ghFileSha } : {})
     };
@@ -795,14 +795,14 @@ function renderStats(){
 // EXPORT / IMPORT
 // ─────────────────────────────────────────────
 function exportJSON(){
-  dl(new Blob([JSON.stringify(flights,null,2)],{type:'application/json'}),'flightlog-backup.json');
+  dl(new Blob([JSON.stringify(flights,null,2)],{type:'application/json'}),'FlightTracker-backup.json');
   toast('JSON EXPORTED');
 }
 function exportCSV(){
   const cols=['num','dep','depT','arr','arrT','seat','airline','depDate','arrDate','sDep','aDep','sArr','aArr','comment','res','status','plane'];
   const headers=['Flight Number','Departure','Terminal Departure','Destination','Terminal Destination','Seat','Company','Departing Date','Arrival Date','Original Departing Time','Actual Departing Time','Original Arrival Time','Actual Arrival Time','Comments','Reservation','Status','Plane'];
   const rows=[headers.join('\t'),...flights.map(f=>cols.map(c=>f[c]||'').join('\t'))];
-  dl(new Blob([rows.join('\n')],{type:'text/csv'}),'flightlog.csv');
+  dl(new Blob([rows.join('\n')],{type:'text/csv'}),'FlightTracker.csv');
   toast('CSV EXPORTED');
 }
 function dl(blob,name){ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click(); }
