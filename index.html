@@ -11,18 +11,18 @@
 
 /* ── DARK THEME (default) ── */
 :root,[data-theme="dark"]{
-  --bg:#2b2b2b;
-  --s1:#0A1F1F;
-  --s2:#0D1721;
-  --border:#253B51;
+  --bg:#151c2e;
+  --s1:#1c2640;
+  --s2:#223052;
+  --border:#2a3f5e;
   --accent:#1a6b8a;        /* dark blue */
-  --accent-bright:#2D4B36; /* bright version for text/icons */
+  --accent-bright:#2596be; /* bright version for text/icons */
   --accent2:#5c3d1e;       /* brown */
   --accent2-bright:#a0673a;
   --green:#1e5c3a;
   --green-bright:#2e9e5e;
-  --text:#dde6f0;
-  --text-strong:#f0f5fb;
+  --text:#8faabe;
+  --text-strong:#a8c0d0;
   --muted:#4a6080;
   --grid-line:rgba(37,150,190,.025);
   --shadow:0 2px 16px rgba(0,0,0,.5);
@@ -34,7 +34,7 @@
   --s1:#ede9e1;
   --s2:#e4dfd5;
   --border:#c8bfaf;
-  --accent:#1A2A3A;        /* dark navy blue */
+  --accent:#1b4f72;        /* dark navy blue */
   --accent-bright:#1b4f72;
   --accent2:#6b3a1f;       /* brown */
   --accent2-bright:#6b3a1f;
@@ -343,14 +343,64 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
       <h2 id="form-title">LOG NEW FLIGHT</h2>
       <input type="hidden" id="edit-idx" value="">
       <div class="form-grid">
+        <!-- Datalists -->
+        <datalist id="dl-airlines">
+          <option>Ryanair</option><option>Vueling</option><option>Iberia</option>
+          <option>Air Europa</option><option>easyJet</option><option>Wizz Air</option>
+          <option>Volotea</option><option>Norwegian</option><option>Lufthansa</option>
+          <option>Air France</option><option>KLM</option><option>British Airways</option>
+          <option>Transavia</option><option>Swiss</option><option>TAP Air Portugal</option>
+          <option>Eurowings</option><option>Brussels Airlines</option><option>Finnair</option>
+          <option>SAS</option><option>Turkish Airlines</option><option>Qatar Airways</option>
+          <option>Emirates</option><option>United Airlines</option><option>American Airlines</option>
+          <option>Delta Air Lines</option>
+        </datalist>
+        <datalist id="dl-airports">
+          <option value="BCN">BCN — Barcelona</option><option value="MAD">MAD — Madrid</option>
+          <option value="VLC">VLC — Valencia</option><option value="AGP">AGP — Málaga</option>
+          <option value="LPA">LPA — Gran Canaria</option><option value="TFN">TFN — Tenerife Norte</option>
+          <option value="IBZ">IBZ — Ibiza</option><option value="PMI">PMI — Palma de Mallorca</option>
+          <option value="SVQ">SVQ — Sevilla</option><option value="BIO">BIO — Bilbao</option>
+          <option value="LHR">LHR — London Heathrow</option><option value="LGW">LGW — London Gatwick</option>
+          <option value="CDG">CDG — Paris Charles de Gaulle</option><option value="AMS">AMS — Amsterdam</option>
+          <option value="FRA">FRA — Frankfurt</option><option value="MUC">MUC — Munich</option>
+          <option value="FCO">FCO — Rome Fiumicino</option><option value="MXP">MXP — Milan Malpensa</option>
+          <option value="LIS">LIS — Lisbon</option><option value="ATH">ATH — Athens</option>
+          <option value="DUB">DUB — Dublin</option><option value="VIE">VIE — Vienna</option>
+          <option value="ZRH">ZRH — Zurich</option><option value="CPH">CPH — Copenhagen</option>
+          <option value="ARN">ARN — Stockholm Arlanda</option><option value="OSL">OSL — Oslo</option>
+          <option value="HEL">HEL — Helsinki</option><option value="BRU">BRU — Brussels</option>
+          <option value="WAW">WAW — Warsaw</option><option value="PRG">PRG — Prague</option>
+          <option value="BUD">BUD — Budapest</option><option value="IST">IST — Istanbul</option>
+          <option value="DXB">DXB — Dubai</option><option value="JFK">JFK — New York JFK</option>
+          <option value="LAX">LAX — Los Angeles</option><option value="ORD">ORD — Chicago O'Hare</option>
+          <option value="MIA">MIA — Miami</option><option value="YYZ">YYZ — Toronto Pearson</option>
+          <option value="GRU">GRU — São Paulo Guarulhos</option><option value="EZE">EZE — Buenos Aires</option>
+        </datalist>
+        <datalist id="dl-planes">
+          <option>737-8AS</option><option>737-800</option><option>737-700</option>
+          <option>737 MAX 8</option><option>A319</option><option>A320</option>
+          <option>A320neo</option><option>A321</option><option>A321neo</option>
+          <option>A321XLR</option><option>A220-300</option><option>A330-200</option>
+          <option>A330-300</option><option>A350-900</option><option>A380</option>
+          <option>787-8</option><option>787-9</option><option>777-200</option>
+          <option>777-300ER</option><option>777X</option><option>E190</option><option>E195</option>
+        </datalist>
+        <datalist id="dl-terminals">
+          <option>T1</option><option>T2</option><option>T3</option><option>T4</option>
+          <option>T4S</option><option>T5</option><option>A</option><option>B</option>
+          <option>C</option><option>D</option><option>E</option><option>F</option>
+          <option>-</option>
+        </datalist>
+
         <div class="fg"><label>Flight Number *</label><input id="f-num" placeholder="FR3174"></div>
-        <div class="fg"><label>Departure IATA *</label><input id="f-dep" placeholder="BCN" maxlength="3" oninput="this.value=this.value.toUpperCase()"></div>
-        <div class="fg"><label>Dep. Terminal</label><input id="f-dept" placeholder="T2"></div>
-        <div class="fg"><label>Destination IATA *</label><input id="f-arr" placeholder="IBZ" maxlength="3" oninput="this.value=this.value.toUpperCase()"></div>
-        <div class="fg"><label>Arr. Terminal</label><input id="f-arrt" placeholder="-"></div>
+        <div class="fg"><label>Departure IATA *</label><input id="f-dep" placeholder="BCN" maxlength="3" list="dl-airports" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="fg"><label>Dep. Terminal</label><input id="f-dept" placeholder="T2" list="dl-terminals"></div>
+        <div class="fg"><label>Destination IATA *</label><input id="f-arr" placeholder="IBZ" maxlength="3" list="dl-airports" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="fg"><label>Arr. Terminal</label><input id="f-arrt" placeholder="-" list="dl-terminals"></div>
         <div class="fg"><label>Seat</label><input id="f-seat" placeholder="12F" oninput="this.value=this.value.toUpperCase()"></div>
-        <div class="fg"><label>Airline</label><input id="f-airline" placeholder="Ryanair"></div>
-        <div class="fg"><label>Aircraft / Plane</label><input id="f-plane" placeholder="737-8AS"></div>
+        <div class="fg"><label>Airline</label><input id="f-airline" placeholder="Ryanair" list="dl-airlines"></div>
+        <div class="fg"><label>Aircraft / Plane</label><input id="f-plane" placeholder="737-8AS" list="dl-planes"></div>
         <div class="fg"><label>Reservation Code</label><input id="f-res" placeholder="BSDVSQ" oninput="this.value=this.value.toUpperCase()"></div>
         <div class="fg"><label>Departing Date</label><input id="f-depdate" type="date"></div>
         <div class="fg"><label>Arrival Date</label><input id="f-arrdate" type="date"></div>
