@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "num": "FR4274",
+    "dep": "GRO",
+    "depT": "T1",
+    "arr": "BGY",
+    "arrT": "T1",
+    "seat": "",
+    "airline": "Ryanair",
+    "plane": "",
+    "res": "NFJM9U",
+    "depDate": "2010-01-24",
+    "arrDate": "2010-01-24",
+    "sDep": "06:40",
+    "aDep": "06:40",
+    "sArr": "",
+    "aArr": "",
+    "comment": "First flight. Off to Milano.",
+    "status": "Flown"
+  }
+]
