@@ -920,13 +920,14 @@ function importCSV(inp){
   r.onload=async e=>{
     try{
       const lines=e.target.result.split('\n').filter(l=>l.trim());
-      const header=lines[0].split(/[\t,]/);
+      const sep=lines[0].includes('\t')?'\t':lines[0].includes(';')?';':',';
+      const header=lines[0].split(sep);
       const colMap={};
       const mapping={'Flight Number':'num','Departure':'dep','Terminal Departure':'depT','Destination':'arr','Terminal Destination':'arrT','Seat':'seat','Company':'airline','Departing Date':'depDate','Arrival Date':'arrDate','Original Departing Time':'sDep','Actual Departing Time':'aDep','Original Arrival Time':'sArr','Actual Arrival Time':'aArr','Comments':'comment','Reservation':'res','Status':'status','Plane':'plane'};
       header.forEach((h,i)=>{const k=mapping[h.trim()];if(k)colMap[k]=i;});
       let added=0;
       lines.slice(1).forEach(line=>{
-        const cells=line.split(/[\t,]/);const f={};
+        const cells=line.split(sep);const f={};
         Object.entries(colMap).forEach(([k,i])=>{f[k]=(cells[i]||'').trim();});
         ['depDate','arrDate'].forEach(dk=>{if(f[dk]&&f[dk].includes('/')){const[d,m,y]=f[dk].split('/');f[dk]=`${y}-${m}-${d}`;}});
         if(!f.num)return;
