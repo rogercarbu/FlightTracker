@@ -638,6 +638,7 @@ async function ghPush(silent=false){
   setSyncing(true,'Pushing to GitHub…');
   try{
     await ghEnsureRepo();
+    if(!ghFileSha){try{const cur=await ghAPI('GET',repoURL(CONFIG.FILE_PATH));ghFileSha=cur.sha;}catch(e){}}
     const content=btoa(unescape(encodeURIComponent(JSON.stringify(flights,null,2))));
     const body={message:`FlightTracker sync — ${new Date().toISOString()}`,content,...(ghFileSha?{sha:ghFileSha}:{})};
     const res=await ghAPI('PUT',repoURL(CONFIG.FILE_PATH),body);
@@ -645,7 +646,10 @@ async function ghPush(silent=false){
     saveLocal();renderGhBar(true);
     if(!silent)toast('PUSHED TO GITHUB');
   }catch(e){
-    console.error(e);toast('PUSH FAILED','err');renderGhBar(true);
+    if(e.message&&e.message.includes('409')){
+      try{const cur=await ghAPI('GET',repoURL(CONFIG.FILE_PATH));ghFileSha=cur.sha;await ghPush(silent);}catch(e2){console.error(e2);toast('PUSH FAILED','err');}
+    }else{console.error(e);toast('PUSH FAILED','err');}
+    renderGhBar(true);
   }
 }
 
@@ -919,7 +923,7 @@ function importCSV(inp){
   const r=new FileReader();
   r.onload=async e=>{
     try{
-      const lines=e.target.result.split('\n').filter(l=>l.trim());
+      const lines=e.target.result.replace(/^\uFEFF/,'').split('\n').filter(l=>l.trim());
       const sep=lines[0].includes('\t')?'\t':lines[0].includes(';')?';':',';
       const header=lines[0].split(sep);
       const colMap={};
