@@ -1,5 +1,24 @@
 [
   {
+    "num": "FR7542",
+    "dep": "BCN",
+    "depT": "T2",
+    "arr": "MAN",
+    "arrT": "",
+    "seat": "",
+    "airline": "Ryanair",
+    "plane": "",
+    "res": "KVHDPF",
+    "depDate": "2026-08-02",
+    "arrDate": "2026-08-02",
+    "sDep": "19:25",
+    "aDep": "",
+    "sArr": "22:45",
+    "aArr": "",
+    "comment": "Comiat de solter Victor",
+    "status": "Upcoming"
+  },
+  {
     "num": "VY7843",
     "dep": "LGW",
     "depT": "South",
