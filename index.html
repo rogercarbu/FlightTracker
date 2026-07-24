@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>FlightTracker</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%E2%9C%88%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<!-- <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%E2%9C%88%EF%B8%8F%3C/text%3E%3C/svg%3E"> -->
+<link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -12,48 +13,52 @@
 
 /* ── DARK THEME (default) ── */
 :root,[data-theme="dark"]{
-  /* --bg:#151c2e; */
-  --bg:#33363c;
-  /* --s1:#1c2640; */
-  --s1:#141c32;
-  --s2:#141c32;
-  --border:#2a3f5e;
-  --accent:#1a6b8a;        /* dark blue */
-  --accent-bright:#2596be; /* bright version for text/icons */
-  --accent2:#5c3d1e;       /* brown */
-  --accent2-bright:#a0673a;
+  --bg:#020305;
+  --s1:#112036;
+  --s2:#142540;
+  --border:#1d3a60;
+  --accent:#17375e;        /* main navy */
+  --accent-bright:#2c6db3;
+  --accent2:#5c3d1e;       
+  --accent2-bright:#b48a69;
   --green:#1e5c3a;
-  --green-bright:#2e9e5e;
-  --text:#8faabe;
-  --text-strong:#a8c0d0;
-  --muted:#4a6080;
-  --grid-line:rgba(37,150,190,.025);
+  --green-bright:#5bac7e;
+  --text:#8fb8dc;
+  --text-strong:#b0d0f0;
+  --muted:#5a7a9a;
+  --grid-line:rgba(44,109,179,.04);
   --shadow:0 2px 16px rgba(0,0,0,.5);
 }
 
 /* ── LIGHT THEME ── */
 [data-theme="light"]{
-  --bg:#f4f1ec;
-  --s1:#ede9e1;
-  --s2:#e4dfd5;
-  --border:#c8bfaf;
-  --accent:#1b4f72;        /* dark navy blue */
-  --accent-bright:#1b4f72;
-  --accent2:#6b3a1f;       /* brown */
-  --accent2-bright:#6b3a1f;
-  --green:#1a4731;
-  --green-bright:#1a6640;
-  --text:#1c2b20;
-  --text-strong:#0d1a10;
-  --muted:#7a6e60;
-  --grid-line:rgba(27,79,114,.04);
+  --bg:#eef3f8;
+  --s1:#e2ecf5;
+  --s2:#d5e4f0;
+  --border:#b0c8dc;
+  --accent:#0f2a48;      
+  --accent-bright:#17375e;
+  --accent-upcoming: #8fb8dc;
+/*  --accent2:#6b3a1f;      
+    --accent2-bright:#6b3a1f; */
+/*  --green:#1a4731;
+  --green-bright:#1a6640; */
+  --accent2:#5c3d1e;       /* brown */
+  --accent2-bright:#b48a69;
+  --green:#1e5c3a;
+  --green-bright:#5bac7e;
+  --text:#1c2e3e;
+  /* --text-strong:#0d1e2e; */
+  --text-strong:#243b55;
+  --muted:#6a7d90;
+  --grid-line:rgba(23,55,94,.05);
   --shadow:0 2px 16px rgba(0,0,0,.12);
 }
 
 html{scroll-behavior:smooth;}
 body{
   background:var(--bg);color:var(--text);
-  font-family:'Outfit',sans-serif;font-size:14px;
+  font-family:'Outfit',sans-serif;font-size:15px;
   min-height:100vh;overflow-x:hidden;
   transition:background .3s,color .3s;
 }
@@ -157,7 +162,7 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
 .seat{background:var(--s1);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-family:'Share Tech Mono',monospace;font-size:11px;}
 .sbadge{padding:2px 10px;border-radius:20px;font-size:9px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
 .sb-flown{background:var(--green);color:var(--green-bright);border:1px solid var(--green);}
-.sb-upcoming{background:var(--accent);color:var(--accent-bright);border:1px solid var(--accent);}
+.sb-upcoming{background:var(--accent);color:var(--accent-upcoming);border:1px solid var(--accent);}
 .sb-cancelled{background:var(--accent2);color:var(--accent2-bright);border:1px solid var(--accent2);}
 .airl{font-size:11px;color:var(--muted);}
 
@@ -218,7 +223,7 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
 /* ── DATA TAB ── */
 .io-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow);}
 .io-card h2{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--text-strong);margin-bottom:6px;}
-.io-card p{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+.io-card p{font-size:14px;color:var(--text);margin-bottom:16px;line-height:1.7;}
 .io-btns{display:flex;gap:10px;flex-wrap:wrap;}
 .btn-io{padding:9px 20px;border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--s2);color:var(--text);}
 .btn-io:hover{border-color:var(--accent-bright);color:var(--accent-bright);}
@@ -239,7 +244,7 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
 .overlay.open{display:flex;}
 .dialog{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:340px;width:90%;box-shadow:var(--shadow);}
 .dialog h3{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent2-bright);margin-bottom:10px;}
-.dialog p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.dialog p{font-size:13px;color:var(--text);margin-bottom:20px;line-height:1.6;}
 .dialog-btns{display:flex;gap:10px;}
 
 /* ── MOBILE ── */
@@ -438,7 +443,7 @@ td{padding:13px 12px;vertical-align:middle;white-space:nowrap;}
       <p>Download your flights as a JSON backup or as a CSV for Excel / Google Sheets.</p>
       <div class="io-btns">
         <button class="btn-io" onclick="exportJSON()">⬇ Export JSON</button>
-        <button class="btn-io" onclick="exportCSV()">⬇ Export CSV (Excel)</button>
+        <button class="btn-io" onclick="exportCSV()">⬇ Export CSV</button>
       </div>
     </div>
     <div class="io-card">
