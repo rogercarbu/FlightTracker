@@ -197,16 +197,16 @@
     "arrT": "",
     "seat": "",
     "airline": "",
-    "depDate": "2011-05-07",
+    "plane": "",
+    "res": "",
+    "depDate": "2011-05-06",
     "arrDate": "2011-05-07",
     "sDep": "",
     "aDep": "",
     "sArr": "",
     "aArr": "",
     "comment": "Camp Espanya Latin",
-    "res": "",
-    "status": "Flown",
-    "plane": ""
+    "status": "Flown"
   },
   {
     "num": "?",
