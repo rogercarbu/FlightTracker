@@ -1,5 +1,24 @@
 [
   {
+    "num": "IB421",
+    "dep": "MAD",
+    "depT": "T4",
+    "arr": "BCN",
+    "arrT": "T1",
+    "seat": "",
+    "airline": "Iberia",
+    "plane": "",
+    "res": "9E4H7D",
+    "depDate": "2026-10-08",
+    "arrDate": "2026-10-08",
+    "sDep": "18:00",
+    "aDep": "",
+    "sArr": "19:15",
+    "aArr": "",
+    "comment": "Código de Reserva: 9E4H7D, Fecha de la Reserva: 03.08.2026",
+    "status": "Upcoming"
+  },
+  {
     "num": "IB402",
     "dep": "BCN",
     "depT": "T1",
