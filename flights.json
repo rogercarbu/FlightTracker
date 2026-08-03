@@ -273,16 +273,16 @@
     "arrT": "T2",
     "seat": "19F",
     "airline": "Vueling",
-    "plane": "",
+    "plane": "A321-271NX",
     "res": "",
     "depDate": "2026-08-01",
     "arrDate": "2026-08-01",
     "sDep": "08:00",
-    "aDep": "",
+    "aDep": "08:17",
     "sArr": "09:40",
-    "aArr": "",
+    "aArr": "09:24",
     "comment": "Comiat solter Victor",
-    "status": "Upcoming"
+    "status": "Flown"
   },
   {
     "num": "FR7542",
@@ -737,7 +737,7 @@
     "aDep": "",
     "sArr": "00:10",
     "aArr": "",
-    "comment": "Ludwig + Premier (no s'utilitza perquÃÂÃÂ¨ em quedo uns dies mÃÂÃÂ©s).",
+    "comment": "Ludwig + Premier (no s'utilitza perquÃÂÃÂÃÂÃÂ¨ em quedo uns dies mÃÂÃÂÃÂÃÂ©s).",
     "status": "Cancelled"
   },
   {
@@ -849,7 +849,7 @@
     "aDep": "18:20",
     "sArr": "21:05",
     "aArr": "21:05",
-    "comment": "NÃÂÃÂÃÂÃÂºria",
+    "comment": "NÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºria",
     "res": "K7RCS3G",
     "status": "Flown",
     "plane": "A319"
@@ -868,7 +868,7 @@
     "aDep": "21:15",
     "sArr": "21:25",
     "aArr": "22:25",
-    "comment": "NÃÂÃÂÃÂÃÂºria",
+    "comment": "NÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºria",
     "res": "K7RCS3G",
     "status": "Flown",
     "plane": "A319"
