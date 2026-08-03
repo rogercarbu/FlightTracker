@@ -311,6 +311,8 @@
     "arrT": "T1",
     "seat": "16C",
     "airline": "Vueling",
+    "plane": "",
+    "res": "QKVBXW",
     "depDate": "2025-12-01",
     "arrDate": "2025-12-01",
     "sDep": "17:20",
@@ -318,9 +320,7 @@
     "sArr": "20:25",
     "aArr": "",
     "comment": "",
-    "res": "QKVBXW",
-    "status": "Flown",
-    "plane": ""
+    "status": "Flown"
   },
   {
     "num": "VY6652",
