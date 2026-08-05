@@ -1,5 +1,24 @@
 [
   {
+    "num": "FR2896",
+    "dep": "BCN",
+    "depT": "T2",
+    "arr": "PMI",
+    "arrT": "T1",
+    "seat": "",
+    "airline": "Ryanair",
+    "plane": "",
+    "res": "A4TIJD",
+    "depDate": "2026-08-08",
+    "arrDate": "2026-08-08",
+    "sDep": "15:15",
+    "aDep": "",
+    "sArr": "16:15",
+    "aArr": "",
+    "comment": "Andreu",
+    "status": "Upcoming"
+  },
+  {
     "num": "IB421",
     "dep": "MAD",
     "depT": "T4",
@@ -15,7 +34,7 @@
     "aDep": "",
     "sArr": "19:15",
     "aArr": "",
-    "comment": "Código de Reserva: 9E4H7D, Fecha de la Reserva: 03.08.2026",
+    "comment": "CÃ³digo de Reserva: 9E4H7D, Fecha de la Reserva: 03.08.2026",
     "status": "Upcoming"
   },
   {
@@ -34,7 +53,7 @@
     "aDep": "",
     "sArr": "10:15",
     "aArr": "",
-    "comment": "ID de viaje interno de Cytric: 5836046535\nCódigo de Reserva: 9E3TTE, Fecha de la Reserva: 03.08.2026",
+    "comment": "ID de viaje interno de Cytric: 5836046535\nCÃ³digo de Reserva: 9E3TTE, Fecha de la Reserva: 03.08.2026",
     "status": "Upcoming"
   },
   {
@@ -775,7 +794,7 @@
     "aDep": "",
     "sArr": "00:10",
     "aArr": "",
-    "comment": "Ludwig + Premier (no s'utilitza perquÃÂÃÂÃÂÃÂ¨ em quedo uns dies mÃÂÃÂÃÂÃÂ©s).",
+    "comment": "Ludwig + Premier (no s'utilitza perquÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¨ em quedo uns dies mÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©s).",
     "status": "Cancelled"
   },
   {
@@ -887,7 +906,7 @@
     "aDep": "18:20",
     "sArr": "21:05",
     "aArr": "21:05",
-    "comment": "NÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºria",
+    "comment": "NÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºria",
     "res": "K7RCS3G",
     "status": "Flown",
     "plane": "A319"
@@ -906,7 +925,7 @@
     "aDep": "21:15",
     "sArr": "21:25",
     "aArr": "22:25",
-    "comment": "NÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºria",
+    "comment": "NÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºria",
     "res": "K7RCS3G",
     "status": "Flown",
     "plane": "A319"
