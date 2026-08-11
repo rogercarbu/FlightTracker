@@ -5,18 +5,18 @@
     "depT": "T1",
     "arr": "BCN",
     "arrT": "T1",
-    "seat": "",
+    "seat": "07A",
     "airline": "Vueling",
-    "plane": "",
+    "plane": "A320-232",
     "res": "ZN2UKT",
     "depDate": "2026-08-09",
     "arrDate": "2026-08-09",
     "sDep": "22:25",
-    "aDep": "",
+    "aDep": "22:59",
     "sArr": "23:25",
-    "aArr": "",
+    "aArr": "23:30",
     "comment": "",
-    "status": "Upcoming"
+    "status": "Flown"
   },
   {
     "num": "FR2896",
